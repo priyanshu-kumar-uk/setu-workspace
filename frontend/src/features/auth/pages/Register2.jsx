@@ -1,0 +1,134 @@
+import React, { useState } from 'react';
+import './Register2.css';
+import { authRegister } from '../hooks/api.hooks';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+
+const Register2 = () => {
+  const { register, handleSubmit, watch } = useForm({ mode: "onChange" });
+  const [focusedField, setFocusedField] = useState(null); 
+  
+  const token = sessionStorage.getItem('reg-token');
+  const navigate = useNavigate();
+  const authRegisterMutation = authRegister();
+
+  const watchFields = watch();
+
+  const nameRules = {
+    min: watchFields.firstname?.length >= 3 && watchFields.lastname?.length >= 3,
+    chars: /^[a-zA-Z\s]+$/.test(watchFields.firstname || "") && /^[a-zA-Z\s]+$/.test(watchFields.lastname || "")
+  };
+  const passRules = {
+    length: watchFields.password?.length >= 6 && watchFields.password?.length <= 20,
+    upper: /[A-Z]/.test(watchFields.password || ""),
+    lower: /[a-z]/.test(watchFields.password || ""),
+    number: /[0-9]/.test(watchFields.password || ""),
+    special: /[@$!%*?&]/.test(watchFields.password || "")
+  };
+
+  // 2. Auto-hide Logic: Agar saare checks pass ho jayein toh toaster hide kar do
+  const showNameToaster = focusedField === 'name' && !(nameRules.min && nameRules.chars);
+  const showPassToaster = focusedField === 'password' && !(passRules.length && passRules.upper && passRules.lower && passRules.number && passRules.special);
+  const isFormValid = nameRules.min && nameRules.chars && passRules.length && passRules.upper && passRules.lower && passRules.number && passRules.special;
+
+   const profileSubmit = (data) => {
+     authRegisterMutation.mutate({
+      firstname: data.firstname,
+      lastname: data.lastname,
+      password: data.password,
+      registrationToken: token
+    }, {
+      onSuccess: () => navigate("/login"),
+      onError: (error) => console.error(error)
+    });
+  };
+
+  return (
+    <div className="register2-page">
+      <nav className="register2-navbar">
+        <div className="register2-navbar-brand">SETU<span className="register2-navbar-brand-highlight">.</span></div>
+      </nav>
+
+      <div className="register2-content">
+        <div className="register2-left-section">
+          <div className="collaboration-illustration">
+             <div className="collaboration-content">
+                <div className="whiteboard-box">
+                    <div className="collaboration-icons"></div>
+                </div>
+                <h3>Ready to Collaborate?</h3>
+                <p>Complete your profile to start.</p>
+             </div>
+          </div>
+        </div>
+
+        <div className="register2-right-section">
+          <form className="register2-form" onSubmit={handleSubmit(profileSubmit)}>
+            <h1 className="register2-heading">Create your account</h1>
+            
+            <div className="form-group-relative">
+              {showNameToaster && (
+                <div className="floating-toaster fade-in">
+                  <p className="toaster-title">Name Requirements:</p>
+                  <li className={nameRules.min ? "check-valid" : "check-invalid"}>At least 3 characters</li>
+                  <li className={nameRules.chars ? "check-valid" : "check-invalid"}>Only letters allowed</li>
+                </div>
+              )}
+              <label className="form-label">Full Name</label>
+              <div className="form-row">
+                <input
+                  type="text"
+                  placeholder="First name"
+                  className="form-input"
+                  {...register("firstname", { required: true })}
+                  onFocus={() => setFocusedField('name')}
+                  onBlur={() => setFocusedField(null)}
+                />
+                <input
+                  type="text"
+                  placeholder="Last name"
+                  className="form-input"
+                  {...register("lastname", { required: true })}
+                  onFocus={() => setFocusedField('name')}
+                  onBlur={() => setFocusedField(null)}
+                />
+              </div>
+            </div>
+
+            <div className="form-group-relative">
+              {showPassToaster && (
+                <div className="floating-toaster fade-in">
+                  <p className="toaster-title">Password must include:</p>
+                  <li className={passRules.length ? "check-valid" : "check-invalid"}>6 to 20 characters</li>
+                  <li className={passRules.upper ? "check-valid" : "check-invalid"}>At least 1 uppercase letter</li>
+                  <li className={passRules.lower ? "check-valid" : "check-invalid"}>At least 1 lowercase letter</li>
+                  <li className={passRules.number ? "check-valid" : "check-invalid"}>At least 1 number</li>
+                  <li className={passRules.special ? "check-valid" : "check-invalid"}>At least 1 special character</li>
+                </div>
+              )}
+              <label className="form-label">Password</label>
+              <input
+                type="password"
+                className="form-input-full"
+                placeholder="Create a strong password"
+                {...register("password", { required: true })}
+                onFocus={() => setFocusedField('password')}
+                onBlur={() => setFocusedField(null)}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="btn-complete-registration"
+              disabled={!isFormValid || authRegisterMutation.isPending}
+            >
+              {authRegisterMutation.isPending ? "PROCESSING..." : "CONTINUE"}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Register2;

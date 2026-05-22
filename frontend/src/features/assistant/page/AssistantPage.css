@@ -1,0 +1,32 @@
+.assistant-layout {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    background: #f5f7fa;
+    position: relative;
+}
+
+.sidebar-open-btn {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.sidebar-open-btn:hover {
+    background: #f1f5f9;
+    color: #0B5CFF;
+    transform: translateY(-1px);
+}

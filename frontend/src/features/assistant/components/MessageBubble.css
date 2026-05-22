@@ -1,0 +1,163 @@
+/* ─── Message Row ──────────────────────────────────────── */
+.msg-row {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+    animation: msgFade 0.25s ease;
+    max-width: 768px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.msg-row-user {
+    justify-content: flex-end;
+}
+
+.msg-row-assistant {
+    justify-content: flex-start;
+}
+
+/* ─── Avatar ───────────────────────────────────────────── */
+.msg-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.msg-avatar-ai {
+    background: linear-gradient(135deg, #0B5CFF 0%, #3b82f6 100%);
+    color: #fff;
+}
+
+.msg-avatar-user {
+    background: #0f172a;
+    color: #fff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* ─── Bubble ───────────────────────────────────────────── */
+.msg-bubble {
+    max-width: 85%;
+    min-width: 40px;
+    position: relative;
+}
+
+.msg-bubble-user {
+    background: #2150afde;
+    color: #ffffff;
+    padding: 0.7rem 1rem;
+    border-radius: 18px 18px 4px 18px;
+    box-shadow: 0 1px 4px rgba(11, 92, 255, 0.15);
+}
+
+.msg-bubble-assistant {
+    background: transparent;
+    padding: 0 0.5rem;
+    border: none;
+    box-shadow: none;
+    color: #1e293b;
+}
+
+.msg-text-user {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+/* ─── Streaming Cursor ─────────────────────────────────── */
+.msg-cursor {
+    display: inline-block;
+    width: 7px;
+    height: 18px;
+    background: #0B5CFF;
+    border-radius: 2px;
+    margin-left: 2px;
+    vertical-align: text-bottom;
+    animation: cursorBlink 0.8s ease-in-out infinite;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+}
+
+/* ─── Error State ──────────────────────────────────────── */
+.msg-error {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+    padding: 0.45rem 0.75rem;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+}
+
+.msg-error-text {
+    font-size: 0.8rem;
+    color: #dc2626;
+}
+
+.msg-retry-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #0B5CFF;
+    background: #e8f0fe;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 0.25rem 0.6rem;
+    cursor: pointer;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+.msg-retry-btn:hover {
+    background: #dbeafe;
+}
+
+/* ─── Message Actions ──────────────────────────────────── */
+.msg-actions {
+    display: flex;
+    gap: 0.25rem;
+    margin-top: 0.35rem;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.msg-row-assistant:hover .msg-actions {
+    opacity: 1;
+}
+
+.msg-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.msg-action-btn:hover {
+    background: #f1f5f9;
+    color: #0B5CFF;
+}
+
+@keyframes msgFade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,553 @@
+/* RoomDashboard.css - Pure Vanilla CSS */
+
+:root {
+  --rd-bg: #121212;
+  --rd-card-bg: #1a1a1a;
+  --rd-border: #27272a;
+  --rd-border-hover: #3f3f46;
+  --rd-text-primary: #f4f4f5;
+  --rd-text-secondary: #a1a1aa;
+  --rd-text-muted: #71717a;
+  --rd-btn-bg: #27272a;
+  --rd-btn-hover: #3f3f46;
+  --rd-active-green: #22c55e;
+  --rd-alert-red: #ef4444;
+  --rd-alert-red-dark: #b91c1c;
+}
+
+/* Fullscreen Dashboard Container */
+.rd-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  color: var(--rd-text-primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0;
+  overflow: hidden;
+  user-select: none;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.rd-container * {
+  box-sizing: border-box;
+}
+
+/* Main Content Area (The Stage) */
+.rd-stage-area {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* Central Workspace Area (Canvas) */
+.rd-workspace {
+  flex: 1;
+  height: 100%;
+  background-color: #000000;
+  border: none;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Green Active Speaker/Share Border */
+.rd-workspace.rd-active-share {
+  border: 2px solid var(--rd-active-green);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
+}
+
+/* Video Conference Grid System */
+.rd-video-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+}
+
+.rd-video-tile {
+  background-color: #0d0d0e;
+  border: 1px solid var(--rd-border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+.rd-video-tile.rd-active-speaker {
+  border-color: var(--rd-active-green);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.15);
+}
+
+.rd-video-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--rd-btn-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rd-text-primary);
+  border: 1px solid var(--rd-border);
+}
+
+.rd-video-name {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--rd-text-secondary);
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Empty states */
+.rd-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: var(--rd-text-muted);
+  font-size: 13px;
+  text-align: center;
+  gap: 12px;
+  padding: 40px 20px;
+}
+
+/* Right Side Panel - Sidebar Container */
+.rd-side-panel {
+  width: 360px;
+  background-color: var(--rd-card-bg);
+  border-left: 1px solid var(--rd-border);
+  border-top: none;
+  border-bottom: none;
+  border-right: none;
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Transition classes for right sidebar */
+.rd-side-panel-enter {
+  width: 0;
+  opacity: 0;
+  margin-left: 0;
+  border-color: transparent;
+  pointer-events: none;
+}
+
+/* Side Panel Header */
+.rd-panel-header {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--rd-border);
+}
+
+.rd-panel-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--rd-text-primary);
+}
+
+.rd-panel-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--rd-text-secondary);
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.rd-panel-close-btn:hover {
+  background-color: var(--rd-btn-bg);
+  color: var(--rd-text-primary);
+}
+
+/* Side Panel Body */
+.rd-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chat UI Components */
+.rd-chat-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.rd-chat-bubble {
+  display: flex;
+  flex-direction: column;
+  max-width: 85%;
+  align-self: flex-start;
+}
+
+.rd-chat-bubble.rd-self {
+  align-self: flex-end;
+}
+
+.rd-bubble-meta {
+  font-size: 10px;
+  color: var(--rd-text-muted);
+  margin-bottom: 4px;
+  margin-left: 4px;
+}
+
+.rd-self .rd-bubble-meta {
+  margin-left: 0;
+  margin-right: 4px;
+  text-align: right;
+}
+
+.rd-bubble-content {
+  background-color: var(--rd-btn-bg);
+  color: var(--rd-text-primary);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.rd-self .rd-bubble-content {
+  background-color: #1e293b; /* Sleek steel blue/gray for self */
+}
+
+/* Chat Input Area */
+.rd-chat-input-wrapper {
+  display: flex;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rd-border);
+}
+
+.rd-input-field {
+  flex: 1;
+  background-color: #0c0c0d;
+  border: 1px solid var(--rd-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: var(--rd-text-primary);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.rd-input-field:focus {
+  border-color: var(--rd-border-hover);
+}
+
+.rd-send-btn {
+  background-color: var(--rd-btn-bg);
+  border: 1px solid var(--rd-border);
+  border-radius: 6px;
+  color: var(--rd-text-primary);
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rd-send-btn:hover {
+  background-color: var(--rd-btn-hover);
+  border-color: var(--rd-border-hover);
+}
+
+/* AI Assistant UI Components */
+.rd-ai-messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.rd-ai-bubble {
+  display: flex;
+  gap: 10px;
+}
+
+.rd-ai-avatar-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: white;
+}
+
+.rd-ai-user-avatar-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--rd-btn-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--rd-text-secondary);
+}
+
+.rd-ai-bubble-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rd-ai-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--rd-text-secondary);
+}
+
+.rd-ai-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--rd-text-primary);
+}
+
+/* Code Snippet Block inside AI */
+.rd-code-block {
+  background-color: #0c0c0d;
+  border: 1px solid var(--rd-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 6px;
+  font-family: 'Consolas', 'Courier New', Courier, monospace;
+}
+
+.rd-code-header {
+  height: 28px;
+  background-color: #151516;
+  border-bottom: 1px solid var(--rd-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-size: 11px;
+  color: var(--rd-text-muted);
+}
+
+.rd-code-body {
+  padding: 10px;
+  font-size: 12px;
+  color: #e4e4e7;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.rd-code-keyword { color: #f43f5e; }
+.rd-code-string { color: #a3e635; }
+.rd-code-function { color: #38bdf8; }
+.rd-code-comment { color: var(--rd-text-muted); }
+
+/* Chips List */
+.rd-ai-chips-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.rd-ai-chip {
+  background-color: var(--rd-btn-bg);
+  border: 1px solid var(--rd-border);
+  color: var(--rd-text-secondary);
+  border-radius: 16px;
+  padding: 6px 12px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rd-ai-chip:hover {
+  background-color: var(--rd-btn-hover);
+  color: var(--rd-text-primary);
+  border-color: var(--rd-border-hover);
+}
+
+/* Glowing typing placeholder line */
+.rd-ai-glowing-input {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rd-ai-glowing-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, #6366f1, #3b82f6, #6366f1);
+  background-size: 200% 100%;
+  animation: rdGlowFlow 2s linear infinite;
+  border-radius: 0 0 6px 6px;
+}
+
+@keyframes rdGlowFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* Bottom Persistent Toolbar nested inside Workspace */
+.rd-toolbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background-color: #0c0c0d; /* Solid dark Zoom style */
+  border-top: 1px solid var(--rd-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 100;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+.rd-toolbar.rd-toolbar-hidden {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Toolbar Groups */
+.rd-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Zoom-style Transparent Toolbar Buttons */
+.rd-toolbar-btn {
+  background: transparent;
+  border: none;
+  color: var(--rd-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  min-width: 60px;
+}
+
+.rd-toolbar-btn:hover {
+  color: var(--rd-text-primary);
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.rd-toolbar-btn svg {
+  color: var(--rd-text-primary);
+}
+
+.rd-toolbar-btn span {
+  color: var(--rd-text-secondary);
+}
+
+.rd-toolbar-btn:hover span {
+  color: var(--rd-text-primary);
+}
+
+/* Active Companion or Chat Sidebar buttons */
+.rd-toolbar-btn.rd-active {
+  color: var(--rd-active-green);
+  background-color: rgba(34, 197, 94, 0.08);
+}
+
+.rd-toolbar-btn.rd-active span {
+  color: var(--rd-active-green);
+}
+
+.rd-toolbar-btn.rd-active svg {
+  color: var(--rd-active-green);
+}
+
+/* Leave/End Meeting btn */
+.rd-toolbar-btn.rd-danger {
+  color: var(--rd-alert-red);
+}
+
+.rd-toolbar-btn.rd-danger svg {
+  color: var(--rd-alert-red);
+}
+
+.rd-toolbar-btn.rd-danger span {
+  color: var(--rd-alert-red);
+}
+
+.rd-toolbar-btn.rd-danger:hover {
+  background-color: rgba(239, 68, 68, 0.12);
+}
+
+/* ── Panel body — zero padding when AI fills the slot ─────────────── */
+/* RoomChatPage has its own layout with header + ChatArea filling 100%.  */
+/* We remove the default 16px padding so it can stretch edge-to-edge.   */
+.rd-panel-body.rd-panel-body-ai {
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ── Docs overlay z-index safety — ensure it sits above the panel ─── */
+/* RoomDocsOverlay is fixed + z-index:200 via its own CSS.              */
+/* This rule ensures the side panel never overlaps the overlay.         */
+.rd-side-panel {
+  z-index: 10;
+  position: relative;
+}

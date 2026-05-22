@@ -1,0 +1,179 @@
+/* RoomChatPage.css
+   All rules scoped under .room-chat-layout so the dashboard
+   AssistantPage / ChatArea remain 100% unaffected. */
+
+/* ── Root layout ──────────────────────────────────────────────────── */
+.room-chat-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: #111113;           /* matches --rd-bg */
+}
+
+/* ── ChatArea dark override ──────────────────────────────────────── */
+.room-chat-layout .chat-area {
+    background: #111113;
+}
+
+.room-chat-layout .chat-messages-scroll {
+    padding: 1rem 1rem 0.5rem;
+}
+
+.room-chat-layout .chat-messages-scroll::-webkit-scrollbar { width: 4px; }
+.room-chat-layout .chat-messages-scroll::-webkit-scrollbar-track { background: transparent; }
+.room-chat-layout .chat-messages-scroll::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 4px;
+}
+
+/* ── WelcomeScreen dark override ─────────────────────────────────── */
+.room-chat-layout .welcome-screen {
+    background: transparent;
+}
+
+.room-chat-layout .welcome-icon-wrap {
+    width: 48px; height: 48px; border-radius: 14px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+}
+
+.room-chat-layout .welcome-title {
+    color: #e4e4e7;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.room-chat-layout .welcome-subtitle {
+    color: #71717a;
+    font-size: 0.85rem;
+    margin-bottom: 0;
+}
+
+/* ── MessageBubble dark override ─────────────────────────────────── */
+.room-chat-layout .msg-row { padding: 0.5rem 0; }
+
+.room-chat-layout .msg-bubble-user {
+    background: #312e81;
+    border-radius: 16px 16px 4px 16px;
+    box-shadow: 0 1px 4px rgba(99, 102, 241, 0.2);
+}
+
+.room-chat-layout .msg-text-user { color: #e0e7ff; }
+
+.room-chat-layout .msg-bubble-assistant {
+    color: #d4d4d8;
+}
+
+/* Streaming cursor — indigo in dark mode */
+.room-chat-layout .msg-cursor {
+    background: #818cf8;
+}
+
+/* AI avatar */
+.room-chat-layout .msg-avatar-ai {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+}
+
+/* Error dark */
+.room-chat-layout .msg-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.25);
+}
+.room-chat-layout .msg-error-text { color: #fca5a5; }
+.room-chat-layout .msg-retry-btn {
+    color: #818cf8;
+    background: rgba(99, 102, 241, 0.12);
+    border-color: rgba(99, 102, 241, 0.25);
+}
+.room-chat-layout .msg-retry-btn:hover { background: rgba(99, 102, 241, 0.2); }
+
+/* Actions */
+.room-chat-layout .msg-action-btn { color: #52525b; }
+.room-chat-layout .msg-action-btn:hover { background: #27272a; color: #a1a1aa; }
+
+/* ── MarkdownRenderer dark override ──────────────────────────────── */
+.room-chat-layout .md-renderer {
+    color: #d4d4d8;
+}
+
+.room-chat-layout .md-renderer h1,
+.room-chat-layout .md-renderer h2,
+.room-chat-layout .md-renderer h3,
+.room-chat-layout .md-renderer h4,
+.room-chat-layout .md-renderer h5,
+.room-chat-layout .md-renderer h6 {
+    color: #f4f4f5;
+}
+
+.room-chat-layout .md-renderer blockquote {
+    background: rgba(99, 102, 241, 0.08);
+    border-left-color: #6366f1;
+    color: #a1a1aa;
+}
+
+.room-chat-layout .md-renderer a { color: #818cf8; }
+
+.room-chat-layout .md-inline-code {
+    background: #1e1e22;
+    color: #a5f3fc;
+    border: 1px solid #2d2d30;
+}
+
+.room-chat-layout .md-table-wrap { border-color: #27272a; }
+.room-chat-layout .md-renderer th { background: #1a1a1c; color: #a1a1aa; border-color: #27272a; }
+.room-chat-layout .md-renderer td { color: #d4d4d8; border-color: #1e1e22; }
+.room-chat-layout .md-renderer tr:hover td { background: #1a1a1c; }
+.room-chat-layout .md-renderer hr { border-color: #27272a; }
+
+/* ── ChatInput dark override ─────────────────────────────────────── */
+.room-chat-layout .chat-input-container {
+    padding: 0 1rem 0.75rem;
+}
+
+.room-chat-layout .chat-input-wrap {
+    background: #1a1a1c;
+    border-color: #27272a;
+    border-radius: 12px;
+    box-shadow: none;
+}
+
+.room-chat-layout .chat-input-wrap:focus-within {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
+.room-chat-layout .chat-input-textarea {
+    color: #e4e4e7;
+    font-size: 0.875rem;
+}
+
+.room-chat-layout .chat-input-textarea::placeholder { color: #52525b; }
+
+.room-chat-layout .chat-input-send-btn {
+    background: #4f46e5;
+    box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3);
+    border-radius: 8px;
+}
+.room-chat-layout .chat-input-send-btn:hover { background: #4338ca; }
+
+.room-chat-layout .chat-input-stop-btn {
+    background: #1a1a1c;
+    border-color: #27272a;
+    color: #71717a;
+    border-radius: 8px;
+}
+.room-chat-layout .chat-input-stop-btn:hover {
+    border-color: #ef4444;
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.room-chat-layout .chat-input-disclaimer { color: #3f3f46; }
+
+/* ── ToolIndicator dark override ─────────────────────────────────── */
+.room-chat-layout .tool-indicator {
+    background: #1a1a1c;
+    border: 1px solid #27272a;
+    color: #71717a;
+}

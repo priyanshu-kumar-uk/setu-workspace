@@ -1,0 +1,53 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --zoom-blue: #0B5CFF;
+  --deep-navy: #232333;
+  --light-grey: #f5f7fa;
+  --white: #ffffff;
+  /* Font Variable */
+  --primary-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* Poori app ke liye clean professional font */
+  font-family: var(--primary-font);
+  background-color: var(--white);
+  color: var(--deep-navy);
+  line-height: 1.5;
+}
+
+/* Loading Spinner Styling */
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7); /* Light transparent background */
+  z-index: 9999; /* Taaki sabse upar rahe */
+  backdrop-filter: blur(2px); /* Modern blur effect */
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db; /* Aapka primary color */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

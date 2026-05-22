@@ -1,0 +1,41 @@
+/* ─── Chat Area ────────────────────────────────────────── */
+.chat-area {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    background: #f5f7fa;
+}
+
+.chat-messages-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+    scroll-behavior: smooth;
+}
+
+/* Thin scrollbar */
+.chat-messages-scroll::-webkit-scrollbar {
+    width: 5px;
+}
+.chat-messages-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+.chat-messages-scroll::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 10px;
+}
+.chat-messages-scroll::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+.chat-messages-inner {
+    max-width: 100%;
+}
+
+.chat-tool-row {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 0.25rem 0 0.25rem 2.75rem;
+}

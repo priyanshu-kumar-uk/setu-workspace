@@ -1,0 +1,53 @@
+import axios from 'axios'
+import api from '../../axiosInstance'
+
+export async function otpSendApi({ email }) {
+    try {
+        let res = await axios.post(`api/auth/otpsend`, { email })
+        return res.data
+    } catch (err) {
+        throw err
+    }
+}
+
+export async function otpVerifyApi({ otp, email }) {
+    try {
+        let res = await axios.post(`api/auth/otpVerify`, { otp, email })
+        return res.data
+    } catch (err) {
+        throw err
+    }
+}
+
+export async function profileRegisterApi({ firstname, lastname, password, registrationToken }) {
+    try {
+        let res = await axios.post(`api/auth/register`, {
+            firstname,
+            lastname,
+            password,
+            registrationToken
+        }, { withCredentials: true })
+        return res.data
+    } catch (err) {
+        throw err
+    }
+}
+
+export async function loginApi({ email, password }) {
+    try {
+        let res = await api.post('/auth/login', { email, password })
+        return res.data
+    } catch (err) {
+        throw err
+    }
+}
+
+export async function getMeApi() {
+    try {
+        let res = await api.get('/auth/getMe', { withCredentials: true })
+        return res.data
+    } catch (err) {
+        throw err
+    }
+}
+

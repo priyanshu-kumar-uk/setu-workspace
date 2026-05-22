@@ -1,0 +1,528 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+/* SETU Register Page Styles */
+
+:root {
+  --zoom-blue: #0B5CFF;
+  --deep-navy: #232333;
+  --light-grey: #f5f7fa;
+  --white: #ffffff;
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--white);
+  color: var(--deep-navy);
+}
+
+/* ===== REGISTER PAGE CONTAINER ===== */
+.register-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--white);
+}
+
+/* ===== NAVBAR ===== */
+.register-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  height: 70px;
+  background-color: var(--white);
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.register-navbar-brand {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #000000;
+  text-transform: uppercase;
+  padding: 0 60px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  display: inline-block;
+}
+
+.register-navbar-brand:hover {
+  opacity: 0.8;
+}
+
+.register-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 60px;
+}
+
+.register-navbar-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666666;
+}
+
+.register-signin-link {
+  color: #0056B3;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.register-signin-link:hover {
+  color: #003d82;
+  text-decoration: underline;
+}
+
+/* ===== MAIN CONTENT ===== */
+.register-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  gap: 2rem;
+  padding: 3rem 4rem;
+  align-items: center;
+}
+
+/* ===== LEFT SECTION - ILLUSTRATION ===== */
+.register-left-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.isometric-illustration {
+  width: 100%;
+  max-width: 500px;
+  height: 500px;
+  background: linear-gradient(135deg, rgba(11, 92, 255, 0.1) 0%, rgba(11, 92, 255, 0.05) 100%);
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(11, 92, 255, 0.15);
+}
+
+.isometric-illustration::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(45deg, transparent 30%, rgba(11, 92, 255, 0.3) 50%, transparent 70%);
+  transform: rotate(45deg) translateY(-50px);
+  animation: float 6s ease-in-out infinite;
+}
+
+.isometric-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.meeting-room-box {
+  width: 280px;
+  height: 200px;
+  background: linear-gradient(135deg, var(--zoom-blue) 0%, #0a4dd4 100%);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 40px rgba(11, 92, 255, 0.3);
+  transform: perspective(1000px) rotateX(5deg) rotateY(-5deg);
+  position: relative;
+}
+
+.meeting-room-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  border-radius: 1rem;
+}
+
+.meeting-room-icon {
+  font-size: 4rem;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+.illustration-text {
+  text-align: center;
+  color: var(--deep-navy);
+}
+
+.illustration-text h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.illustration-text p {
+  font-size: 0.95rem;
+  color: #666666;
+  line-height: 1.5;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: rotate(45deg) translateY(-50px);
+  }
+  50% {
+    transform: rotate(45deg) translateY(-80px);
+  }
+}
+
+/* ===== RIGHT SECTION - FORM ===== */
+.register-right-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.register-form {
+  max-width: 350px;
+  width: 100%;
+}
+
+.register-heading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--deep-navy);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.register-subtext {
+  font-size: 0.85rem;
+  color: #666666;
+  margin-bottom: 1.25rem;
+  line-height: 1.5;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--deep-navy);
+}
+
+.form-input {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e0e5ed;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background-color: var(--white);
+  color: var(--deep-navy);
+  transition: all var(--transition-smooth);
+}
+
+.form-input::placeholder {
+  color: #a0aec0;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--zoom-blue);
+  box-shadow: 0 0 0 3px rgba(11, 92, 255, 0.1);
+  background-color: rgba(11, 92, 255, 0.02);
+}
+
+/* ===== INPUT ERROR STATE ===== */
+.input-error {
+  border: 1.5px solid #ff4d4d !important;
+  background-color: #fff5f5 !important;
+}
+
+.input-error:focus {
+  border-color: #ff4d4d !important;
+  box-shadow: 0 0 0 3px rgba(255, 77, 77, 0.1) !important;
+  background-color: #fff5f5 !important;
+}
+
+/* ===== ERROR TEXT ===== */
+.error-text {
+  font-size: 0.75rem;
+  color: #ff4d4d;
+  margin-top: 0.375rem;
+  display: block;
+  font-weight: 500;
+}
+
+/* ===== COUNTDOWN TIMER ===== */
+.countdown-timer {
+  font-size: 0.85rem;
+  color: #ff6b6b;
+  font-weight: 600;
+  padding: 0.75rem 1rem;
+  background-color: #fff5f5;
+  border: 1.5px solid #ffc0c0;
+  border-radius: 0.75rem;
+  margin-bottom: 1.25rem;
+  text-align: center;
+  animation: pulse-warning 1s ease-in-out infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ===== SEND OTP BUTTON ===== */
+.btn-send-otp {
+  width: 100%;
+  padding: 0.85rem;
+  background-color: var(--zoom-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  box-shadow: 0 4px 16px rgba(11, 92, 255, 0.3);
+  margin-bottom: 1.25rem;
+}
+
+.btn-send-otp:hover:not(:disabled) {
+  background-color: #0a4dd4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(11, 92, 255, 0.4);
+}
+
+.btn-send-otp:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== OTP SECTION ===== */
+.otp-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #e0e5ed;
+}
+
+.otp-section.hidden {
+  display: none;
+}
+
+.otp-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--deep-navy);
+}
+
+.otp-boxes-container {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.otp-box {
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 2px solid #e0e5ed;
+  border-radius: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+  background-color: var(--white);
+  color: var(--deep-navy);
+  cursor: text;
+  transition: all var(--transition-smooth);
+}
+
+.otp-box:focus {
+  outline: none;
+  border-color: var(--zoom-blue);
+  box-shadow: 0 0 0 3px rgba(11, 92, 255, 0.1);
+  background-color: rgba(11, 92, 255, 0.02);
+}
+
+.otp-box::-webkit-outer-spin-button,
+.otp-box::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.otp-box[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* ===== VERIFY OTP BUTTON ===== */
+.btn-verify-otp {
+  width: 100%;
+  padding: 0.85rem;
+  background-color: var(--zoom-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  box-shadow: 0 4px 16px rgba(11, 92, 255, 0.3);
+}
+
+.btn-verify-otp:hover:not(:disabled) {
+  background-color: #0a4dd4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(11, 92, 255, 0.4);
+}
+
+.btn-verify-otp:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== ERROR MESSAGE ===== */
+.error-message {
+  font-size: 0.85rem;
+  color: #ef4444;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.error-message.hidden {
+  display: none;
+}
+
+/* ===== SUCCESS MESSAGE ===== */
+.success-message {
+  font-size: 0.85rem;
+  color: #10b981;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.success-message.hidden {
+  display: none;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+  .register-content {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+
+  .register-left-section {
+    order: 2;
+  }
+
+  .register-right-section {
+    order: 1;
+  }
+
+  .isometric-illustration {
+    max-width: 100%;
+    height: 300px;
+  }
+
+  .meeting-room-box {
+    width: 200px;
+    height: 150px;
+  }
+
+  .meeting-room-icon {
+    font-size: 3rem;
+  }
+
+  .register-navbar {
+    padding: 0 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .register-navbar {
+    padding: 0 20px;
+    height: 60px;
+  }
+
+  .register-navbar-brand {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+  }
+
+  .register-navbar-right {
+    gap: 12px;
+  }
+
+  .register-navbar-text {
+    display: none;
+  }
+
+  .register-signin-link {
+    font-size: 13px;
+  }
+
+  .register-content {
+    padding: 1.5rem;
+  }
+
+  .register-heading {
+    font-size: 1.5rem;
+  }
+
+  .register-form {
+    max-width: 100%;
+  }
+
+  .otp-boxes-container {
+    gap: 0.5rem;
+  }
+
+  .isometric-illustration {
+    height: 250px;
+  }
+}
+
+
+.register2-navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+  /* Bhai, tumhara logo font wahi hai jo pehle tha */
+  font-family: 'Courier New', monospace; 
+}

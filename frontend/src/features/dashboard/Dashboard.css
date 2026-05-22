@@ -1,0 +1,53 @@
+/* ===== Dashboard Layout ===== */
+
+.dashboard-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f5f7fa;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.dashboard-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.dashboard-main-content {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #f5f7fa;
+  padding: 0;
+  position: relative;
+}
+
+/* Floating Assistant Button */
+.floating-assistant-btn {
+  position: absolute;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #0B5CFF 0%, #3b82f6 100%);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 14px rgba(11, 92, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.floating-assistant-btn:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(11, 92, 255, 0.5);
+}
+
+.floating-assistant-btn:active {
+  transform: translateY(0) scale(0.95);
+}

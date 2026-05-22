@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { verifedUser } from "../middlewares/userVerify.js";
+import { handleChatStream, getChats, getChatMsgs, removeChatCtrl, renameChatCtrl,} from "../controllers/ai.controller.js";
+
+const aiRouter = Router();
+
+aiRouter.post("/chat/stream", verifedUser, handleChatStream);
+aiRouter.get("/chats", verifedUser, getChats);
+aiRouter.get("/chats/:chatId/messages", verifedUser, getChatMsgs);
+aiRouter.delete("/chats/:chatId", verifedUser, removeChatCtrl);
+aiRouter.patch("/chats/:chatId/title", verifedUser, renameChatCtrl);
+
+export default aiRouter;

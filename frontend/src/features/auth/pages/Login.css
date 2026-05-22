@@ -1,0 +1,419 @@
+/* ============================================
+   SETU LOGIN PAGE - CLEAN MINIMALIST UI
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: #FFFFFF;
+  color: #000000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   CONTAINER & LAYOUT
+   ============================================ */
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #FFFFFF;
+}
+
+.login-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ============================================
+   NAVBAR STYLING
+   ============================================ */
+
+.login-navbar {
+  background: #FFFFFF;
+  border-bottom: 1px solid #F0F0F0;
+  padding: 0;
+}
+
+.navbar-content {
+  max-width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 60px;
+  margin: 0 auto;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.navbar-logo:hover {
+  opacity: 0.8;
+}
+
+.setu-logo {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #000000;
+  text-transform: uppercase;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666666;
+}
+
+.navbar-signup-link {
+  color: #0056B3;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navbar-signup-link:hover {
+  color: #003d82;
+  text-decoration: underline;
+}
+
+/* ============================================
+   LEFT SECTION - LOGIN FORM
+   ============================================ */
+
+.login-form-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  background: #FFFFFF;
+}
+
+.login-form-wrapper {
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #000000;
+  margin-bottom: 40px;
+  line-height: 1.3;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ============================================
+   FORM GROUP STYLING
+   ============================================ */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #CCCCCC;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #000000;
+  background: #FFFFFF;
+  transition: border-color 0.2s ease;
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: #999999;
+}
+
+.form-input:focus {
+  border-color: #0056B3;
+}
+
+.form-input:hover {
+  border-color: #AAAAAA;
+}
+
+/* ============================================
+   SUBMIT BUTTON
+   ============================================ */
+
+.login-button {
+  padding: 12px 24px;
+  background: #0056B3;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-top: 8px;
+}
+
+.login-button:hover {
+  background: #003d82;
+}
+
+.login-button:active {
+  background: #002d5f;
+}
+
+/* ============================================
+   RIGHT SECTION - IMAGE
+   ============================================ */
+
+.login-image-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  background: #F9F9F9;
+}
+
+.image-placeholder {
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1 / 1.25;
+  background: #FFFFFF;
+  border-radius: 8px;
+  border: 1px solid #E8E8E8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.meeting-illustration {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .login-main {
+    grid-template-columns: 1fr;
+  }
+
+  .login-form-section {
+    padding: 40px 30px;
+  }
+
+  .login-image-section {
+    display: none;
+  }
+
+  .login-form-wrapper {
+    max-width: 100%;
+  }
+
+  .navbar-content {
+    padding: 0 40px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .navbar-content {
+    padding: 0 20px;
+    height: 60px;
+  }
+
+  .setu-logo {
+    font-size: 18px;
+    letter-spacing: 0.5px;
+  }
+
+  .navbar-right {
+    gap: 12px;
+  }
+
+  .navbar-text {
+    display: none;
+  }
+
+  .navbar-signup-link {
+    font-size: 13px;
+  }
+
+  .login-form-section {
+    padding: 30px 20px;
+  }
+
+  .login-title {
+    font-size: 22px;
+    margin-bottom: 32px;
+  }
+
+  .login-form {
+    gap: 20px;
+  }
+
+  .form-input {
+    padding: 11px 12px;
+    font-size: 14px;
+  }
+
+  .login-button {
+    padding: 11px 20px;
+    font-size: 13px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+  .navbar-content {
+    padding: 0 16px;
+  }
+
+  .login-form-section {
+    padding: 20px 16px;
+  }
+
+  .login-title {
+    font-size: 20px;
+    margin-bottom: 28px;
+  }
+
+  .login-form {
+    gap: 16px;
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  .form-input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid #0056B3;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Centered Slide Down Animation */
+
+/* 🟢 Step 1: Wrapper (Iske bina centering nahi hogi) */
+.login-form-wrapper {
+  width: 100%;
+  max-width: 380px;
+  position: relative; /* Contextual anchor */
+  margin: 0 auto;
+}
+
+.floating-toaster2 {
+  position: absolute;
+  left: -50%;
+  
+  width: fit-content;       /* Jitna message, utna bada box */
+  min-width: 320px;
+  max-width: 400px;
+  
+  background: #d32f2f;     
+  color: white;             /* White text for contrast */
+  
+  padding: 12px 20px;
+  border-radius: 4px;       /* Sharp & professional corners */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: slideDownFade 0.3s ease-out;
+}
+
+
+
+.toaster-text2 {
+  display: flex;
+  flex-direction: column;
+}
+
+.toaster-message2 {
+  font-size: 14px;
+  font-weight: 400;
+}
+.toaster-close:hover {
+  opacity: 1;
+}
+
+/* Slide Down Animation */
+@keyframes slideDownFade {
+  from { 
+    transform: translate(-50%, -10px); 
+    opacity: 0; 
+  }
+  to { 
+    transform: translate(-50%, 0); 
+    opacity: 1; 
+  }
+}

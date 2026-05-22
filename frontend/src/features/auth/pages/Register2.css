@@ -1,0 +1,764 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+/* SETU Register Phase 2 Page Styles */
+
+:root {
+  --zoom-blue: #0B5CFF;
+  --deep-navy: #232333;
+  --light-grey: #f5f7fa;
+  --white: #ffffff;
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--white);
+  color: var(--deep-navy);
+}
+
+/* ===== REGISTER2 PAGE CONTAINER ===== */
+.register2-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--white);
+}
+
+/* ===== NAVBAR ===== */
+.register2-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 4rem;
+  background-color: var(--white);
+  box-shadow: var(--shadow-soft);
+  border-bottom: 1px solid #e0e5ed;
+}
+
+.register2-navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+  font-family: 'Courier New', monospace;
+}
+
+.register2-navbar-brand-highlight {
+  color: var(--zoom-blue);
+}
+
+.register2-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.register2-navbar-text {
+  font-size: 0.9rem;
+  color: #a0aec0;
+  font-weight: 500;
+}
+
+.register2-navbar-link {
+  font-size: 0.9rem;
+  color: var(--zoom-blue);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.register2-navbar-link:hover {
+  color: #0a4dd4;
+  text-decoration: underline;
+}
+
+/* ===== MAIN CONTENT ===== */
+.register2-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  flex: 1;
+  gap: 2rem;
+  padding: 3rem 4rem;
+  align-items: center;
+}
+
+/* ===== LEFT SECTION - ILLUSTRATION ===== */
+.register2-left-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.collaboration-illustration {
+  width: 100%;
+  max-width: 500px;
+  height: 500px;
+  background: linear-gradient(135deg, rgba(11, 92, 255, 0.1) 0%, rgba(11, 92, 255, 0.05) 100%);
+  border-radius: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(11, 92, 255, 0.15);
+}
+
+.collaboration-illustration::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(45deg, transparent 30%, rgba(11, 92, 255, 0.3) 50%, transparent 70%);
+  transform: rotate(45deg) translateY(-50px);
+  animation: floatSlow 7s ease-in-out infinite;
+}
+
+.collaboration-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.whiteboard-box {
+  width: 300px;
+  height: 220px;
+  background: linear-gradient(135deg, var(--zoom-blue) 0%, #0a4dd4 100%);
+  border-radius: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 40px rgba(11, 92, 255, 0.3);
+  transform: perspective(1000px) rotateX(5deg) rotateY(-5deg);
+  position: relative;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.whiteboard-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(45deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+  border-radius: 1rem;
+}
+
+.collaboration-icons {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 2.5rem;
+}
+
+.collaboration-icons::before {
+  content: '👥';
+}
+
+.collaboration-icons::after {
+  content: '💻';
+}
+
+.collaboration-text {
+  text-align: center;
+  color: var(--deep-navy);
+  position: relative;
+  z-index: 2;
+}
+
+.collaboration-text h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.collaboration-text p {
+  font-size: 0.95rem;
+  color: #666666;
+  line-height: 1.5;
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: rotate(45deg) translateY(-50px);
+  }
+  50% {
+    transform: rotate(45deg) translateY(-80px);
+  }
+}
+
+/* ===== RIGHT SECTION - FORM ===== */
+.register2-right-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.register2-form {
+  max-width: 350px;
+  width: 100%;
+}
+
+.register2-heading {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--deep-navy);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.5px;
+}
+
+.register2-subtext {
+  font-size: 0.85rem;
+  color: #666666;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--deep-navy);
+}
+
+.form-input {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e0e5ed;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background-color: var(--white);
+  color: var(--deep-navy);
+  transition: all var(--transition-smooth);
+}
+
+.form-input::placeholder {
+  color: #a0aec0;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--zoom-blue);
+  box-shadow: 0 0 0 3px rgba(11, 92, 255, 0.1);
+  background-color: rgba(11, 92, 255, 0.02);
+}
+
+/* ===== PASSWORD FIELD ===== */
+.password-field-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.form-input-password {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  padding-right: 2.75rem;
+  border: 1.5px solid #e0e5ed;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  background-color: var(--white);
+  color: var(--deep-navy);
+  transition: all var(--transition-smooth);
+}
+
+.form-input-password::placeholder {
+  color: #a0aec0;
+}
+
+.form-input-password:focus {
+  outline: none;
+  border-color: var(--zoom-blue);
+  box-shadow: 0 0 0 3px rgba(11, 92, 255, 0.1);
+  background-color: rgba(11, 92, 255, 0.02);
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  color: #a0aec0;
+  transition: all var(--transition-smooth);
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle-btn:hover {
+  color: var(--zoom-blue);
+}
+
+/* ===== COMPLETE REGISTRATION BUTTON ===== */
+.btn-complete-registration {
+  width: 100%;
+  padding: 0.85rem;
+  background-color: var(--zoom-blue);
+  color: var(--white);
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  box-shadow: 0 4px 16px rgba(11, 92, 255, 0.3);
+  margin-top: 0.5rem;
+}
+
+.btn-complete-registration:hover:not(:disabled) {
+  background-color: #0a4dd4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(11, 92, 255, 0.4);
+}
+
+.btn-complete-registration:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+  .register2-content {
+    grid-template-columns: 1fr;
+    padding: 2rem;
+    gap: 1.5rem;
+  }
+
+  .register2-left-section {
+    order: 2;
+  }
+
+  .register2-right-section {
+    order: 1;
+  }
+
+  .collaboration-illustration {
+    max-width: 100%;
+    height: 300px;
+  }
+
+  .whiteboard-box {
+    width: 250px;
+    height: 180px;
+  }
+
+  .collaboration-icons {
+    font-size: 2rem;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .register2-navbar {
+    padding: 1rem 1.5rem;
+  }
+
+  .register2-content {
+    padding: 1.5rem;
+  }
+
+  .register2-heading {
+    font-size: 1.5rem;
+  }
+
+  .register2-form {
+    max-width: 100%;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .collaboration-illustration {
+    height: 250px;
+  }
+
+  .register2-navbar-text {
+    display: none;
+  }
+}
+/* Niche wale styles Register2.css ke end mein add kardo */
+
+.validation-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-medium);
+  width: 100%;
+  max-width: 400px;
+}
+
+.validation-card h3 {
+  color: var(--deep-navy);
+  margin-bottom: 0.5rem;
+}
+
+.validation-card p {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.requirement-group {
+  margin-bottom: 1.5rem;
+}
+
+.requirement-group h4 {
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  color: var(--zoom-blue);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.validation-card li {
+  list-style: none;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+/* Red state (Invalid) */
+.invalid {
+  color: #ef4444;
+}
+.invalid::before {
+  content: '○';
+  font-weight: bold;
+}
+
+/* Green state (Valid) */
+.valid {
+  color: #10b981;
+  font-weight: 500;
+}
+.valid::before {
+  content: '●';
+}
+
+/* Border highlighting */
+.error-border {
+  border-color: #ef4444 !important;
+}
+
+/* Button disabled state */
+.btn-complete-registration:disabled {
+  background-color: #cbd5e1;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* Container for absolute tooltip positioning */
+.relative {
+  position: relative;
+}
+
+/* Floating Tooltip Box */
+.floating-tooltip {
+  position: absolute;
+  bottom: 110%; /* Input ke upar dikhega */
+  left: 0;
+  background: white;
+  padding: 0.8rem 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e5ed;
+  z-index: 100;
+  width: 100%;
+  min-width: 200px;
+  animation: slideUp 0.2s ease-out;
+}
+
+/* Password specific tooltip width */
+.password-tip {
+  width: 250px;
+}
+
+.floating-tooltip strong {
+  display: block;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-bottom: 0.4rem;
+}
+
+.floating-tooltip p {
+  font-size: 0.75rem;
+  margin: 0.2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Checkmark colors */
+.v-invalid {
+  color: #94a3b8; /* Grey jab tak fulfill na ho */
+}
+
+.v-valid {
+  color: #10b981; /* Green jab fulfill ho jaye */
+  font-weight: 600;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Arrow for the tooltip */
+.floating-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+/* Container for field + toaster */
+.form-group-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Floating Toaster Box */
+.validation-toaster {
+  position: absolute;
+  bottom: 110%; /* Input ke upar dikhega */
+  left: 0;
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border: 1px solid #e2e8f0;
+  z-index: 10;
+  animation: slideUp 0.2s ease-out;
+}
+
+/* Arrow for the toaster */
+.validation-toaster::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}
+
+.toaster-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+
+.validation-toaster li {
+  list-style: none;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Red/Green Logic */
+.v-invalid { color: #64748b; } /* Grey initially like your image */
+.v-invalid::before { content: '○'; }
+
+.v-valid { color: #10b981; font-weight: 600; }
+.v-valid::before { content: '✓'; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Grid Layout Fix */
+.register2-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Fixed columns */
+  height: calc(100vh - 80px);
+  align-items: center;
+  padding: 0 5%;
+}
+
+/* Layout consistency */
+.register2-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  min-height: 80vh;
+}
+
+/* Form Container */
+.form-group-relative {
+  position: relative;
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+/* Floating Toaster Styles */
+.floating-toaster {
+  position: absolute;
+  bottom: 110%; /* Input ke theek upar */
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e5ed;
+  z-index: 100;
+}
+
+/* Arrow indicator for toaster */
+.floating-toaster::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: #ffffff transparent transparent transparent;
+}
+
+.toaster-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #232333;
+  margin-bottom: 0.5rem;
+}
+
+.floating-toaster li {
+  list-style: none;
+  font-size: 0.8rem;
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Checklist states */
+.check-invalid { color: #64748b; }
+.check-invalid::before { content: '○'; }
+
+.check-valid { color: #10b981; font-weight: 600; }
+.check-valid::before { content: '✓'; }
+
+/* Input adjustments */
+.form-input-full {
+  width: 100%;
+  padding: 0.85rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.5rem;
+}
+
+.form-input-full:focus {
+  border-color: #0B5CFF;
+  outline: none;
+}
+
+/* Animation */
+.fade-in {
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+.register2-heading {
+  font-family: var(--primary-font); /* Same as body but bold */
+  font-size: 1.85rem;
+  font-weight: 800; /* Extra bold for startup feel */
+  color: var(--deep-navy);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em; /* Tight letter spacing for modern look */
+}
+
+/* Baki saare elements (labels, inputs, buttons) automatically Inter use karenge */
+.form-label {
+  font-family: var(--primary-font);
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.form-input, .form-input-password, .btn-complete-registration {
+  font-family: var(--primary-font);
+}
+
+.register2-subtext {
+  font-family: var(--primary-font);
+  font-weight: 400;
+  color: #64748b;
+}
+
+/* Floating Toaster fonts check */
+.toaster-title {
+  font-family: var(--primary-font);
+  font-weight: 700;
+}
+
+.floating-toaster li {
+  font-family: var(--primary-font);
+  font-weight: 500;
+}
