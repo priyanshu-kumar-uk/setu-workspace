@@ -1,0 +1,302 @@
+/* ═══════════════════════════════════════════════════════════════
+   VirtualBrowser.css — Vanilla CSS for the in-room browser
+   Uses existing --rd-* design tokens from RoomDashboard.css
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Container ────────────────────────────────────────────── */
+.vb-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: #0e0e10;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Tab Strip ────────────────────────────────────────────── */
+.vb-tab-strip {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  min-height: 38px;
+  background-color: #151518;
+  border-bottom: 1px solid var(--rd-border, #27272a);
+  padding: 0 4px;
+  gap: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  user-select: none;
+}
+
+.vb-tab-strip::-webkit-scrollbar {
+  height: 0;
+}
+
+.vb-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px 6px 0 0;
+  color: var(--rd-text-secondary, #a1a1aa);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  max-width: 180px;
+  min-width: 80px;
+  flex-shrink: 0;
+  position: relative;
+  font-family: inherit;
+}
+
+.vb-tab:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--rd-text-primary, #f4f4f5);
+}
+
+.vb-tab.vb-tab-active {
+  background-color: #1e1e22;
+  border-color: var(--rd-border, #27272a);
+  border-bottom-color: #1e1e22;
+  color: var(--rd-text-primary, #f4f4f5);
+}
+
+.vb-tab-favicon {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  background-color: var(--rd-btn-bg, #27272a);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vb-tab-favicon img {
+  width: 12px;
+  height: 12px;
+  border-radius: 1px;
+}
+
+.vb-tab-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vb-tab-close {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: none;
+  background: transparent;
+  color: var(--rd-text-muted, #71717a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: all 0.1s;
+  padding: 0;
+  font-family: inherit;
+}
+
+.vb-tab:hover .vb-tab-close,
+.vb-tab.vb-tab-active .vb-tab-close {
+  opacity: 1;
+}
+
+.vb-tab-close:hover {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: var(--rd-alert-red, #ef4444);
+}
+
+.vb-tab-add {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--rd-text-muted, #71717a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: 2px;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.vb-tab-add:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: var(--rd-text-primary, #f4f4f5);
+  border-color: var(--rd-border, #27272a);
+}
+
+/* ── Navigation Bar ───────────────────────────────────────── */
+.vb-navbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0 10px;
+  background-color: #1a1a1e;
+  border-bottom: 1px solid var(--rd-border, #27272a);
+}
+
+.vb-nav-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--rd-text-secondary, #a1a1aa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  padding: 0;
+  font-family: inherit;
+}
+
+.vb-nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--rd-text-primary, #f4f4f5);
+}
+
+.vb-nav-btn:active {
+  transform: scale(0.92);
+}
+
+.vb-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.vb-nav-btn:disabled:hover {
+  background: transparent;
+  color: var(--rd-text-secondary, #a1a1aa);
+}
+
+.vb-url-bar {
+  flex: 1;
+  height: 30px;
+  background-color: #0e0e10;
+  border: 1px solid var(--rd-border, #27272a);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: var(--rd-text-primary, #f4f4f5);
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.vb-url-bar:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.vb-url-bar::placeholder {
+  color: var(--rd-text-muted, #71717a);
+}
+
+/* ── Canvas Viewport ──────────────────────────────────────── */
+.vb-viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: #0a0a0c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vb-canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  cursor: default;
+  image-rendering: auto;
+}
+
+/* ── Loading / Error States ───────────────────────────────── */
+.vb-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  height: 100%;
+  color: var(--rd-text-muted, #71717a);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.vb-loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--rd-border, #27272a);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: vb-spin 0.7s linear infinite;
+}
+
+@keyframes vb-spin {
+  to { transform: rotate(360deg); }
+}
+
+.vb-error-toast {
+  position: absolute;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(239, 68, 68, 0.9);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 50;
+  pointer-events: none;
+  animation: vb-toast-in 0.2s ease-out, vb-toast-out 0.3s ease-in 2.7s forwards;
+}
+
+@keyframes vb-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes vb-toast-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* ── Connection indicator ─────────────────────────────────── */
+.vb-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.vb-status-dot.connected {
+  background-color: var(--rd-active-green, #22c55e);
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+}
+
+.vb-status-dot.disconnected {
+  background-color: var(--rd-alert-red, #ef4444);
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}

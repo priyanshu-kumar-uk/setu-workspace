@@ -16,11 +16,12 @@ import {
   FileText
 } from 'lucide-react';
 
-// ─── Room-context feature panels ────────────────────────────────────
 // AI: existing ephemeral RoomChatPage (mode: "room", no DB writes)
 import RoomChatPage from '../assistant/page/RoomChatPage';
 // Docs: new draggable/resizable persistent overlay
 import RoomDocsOverlay from './RoomDocsOverlay';
+// Virtual Browser
+import VirtualBrowser from './browser/VirtualBrowser';
 
 import './RoomDashboard.css';
 
@@ -28,26 +29,24 @@ const RoomDashboard = () => {
   const navigate = useNavigate();
   const { roomId } = useParams();
 
-  // ── UI layout states ─────────────────────────────────────────────
   // activePanel drives the right side-panel slot: 'none' | 'chat' | 'ai'
   const [activePanel, setActivePanel] = useState('none');
   // Docs overlay is an independent boolean — it floats above the canvas
   // and does NOT affect the side-panel layout at all.
   const [showDocsOverlay, setShowDocsOverlay] = useState(false);
 
-  // ── AV states ────────────────────────────────────────────────────
   const [isMicMuted, setIsMicMuted] = useState(false);
   const [isVideoOn, setIsVideoOn] = useState(true);
   const [showControls, setShowControls] = useState(true);
 
-  // ── Room Chat panel state (local, peer messaging) ────────────────
+  const [showBrowser, setShowBrowser] = useState(false);
+
   const [chatMessages, setChatMessages] = useState([]);
   const [chatInput, setChatInput] = useState('');
   const chatBottomRef = useRef(null);
 
   const controlsTimerRef = useRef(null);
 
-  // ── Auto-hide toolbar after 3s of inactivity ────────────────────
   const handleMouseMove = () => {
     setShowControls(true);
     if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
@@ -71,14 +70,12 @@ const RoomDashboard = () => {
     };
   }, [activePanel]);
 
-  // ── Scroll chat to bottom ────────────────────────────────────────
   useEffect(() => {
     if (activePanel === 'chat' && chatBottomRef.current) {
       chatBottomRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chatMessages, activePanel]);
 
-  // ── Panel toggle ─────────────────────────────────────────────────
   // Chat / AI → right side-panel
   const handleTogglePanel = (panelType) => {
     setActivePanel(prev => prev === panelType ? 'none' : panelType);
@@ -89,7 +86,6 @@ const RoomDashboard = () => {
     setShowDocsOverlay(prev => !prev);
   };
 
-  // ── Room chat submission ─────────────────────────────────────────
   const handleSendChatMessage = (e) => {
     if (e) e.preventDefault();
     if (!chatInput.trim()) return;
@@ -106,7 +102,6 @@ const RoomDashboard = () => {
     setChatInput('');
   };
 
-  // ── Exit room ────────────────────────────────────────────────────
   const handleExitRoom = () => navigate('/dashboard/home');
 
   return (
@@ -122,19 +117,16 @@ const RoomDashboard = () => {
         )}
       </AnimatePresence>
 
-      {/* ── Main Stage ── */}
       <div className="rd-stage-area">
 
-        {/* ── Central Canvas ── */}
         <div className="rd-workspace" style={{ backgroundColor: '#000000' }}>
+          {showBrowser && <VirtualBrowser roomId={roomId} onClose={() => setShowBrowser(false)} />}
 
-          {/* Floating Bottom Toolbar */}
           <div
             className={`rd-toolbar ${!showControls ? 'rd-toolbar-hidden' : ''}`}
             onMouseEnter={handleToolbarMouseEnter}
             onMouseLeave={handleMouseMove}
           >
-            {/* Left: AV Controls */}
             <div className="rd-toolbar-group">
               <button
                 className="rd-toolbar-btn"
@@ -159,7 +151,6 @@ const RoomDashboard = () => {
               </button>
             </div>
 
-            {/* Center: Feature buttons */}
             <div className="rd-toolbar-group">
               <button className="rd-toolbar-btn" title="Participants">
                 <Users size={20} />
@@ -180,12 +171,15 @@ const RoomDashboard = () => {
                 <span>Share</span>
               </button>
 
-              <button className="rd-toolbar-btn" title="Web Browser">
+              <button
+                className={`rd-toolbar-btn ${showBrowser ? 'rd-active' : ''}`}
+                onClick={() => setShowBrowser(v => !v)}
+                title="Web Browser"
+              >
                 <Globe size={20} />
                 <span>Browser</span>
               </button>
 
-              {/* Docs → toggles floating overlay, independent of side panel */}
               <button
                 className={`rd-toolbar-btn ${showDocsOverlay ? 'rd-active' : ''}`}
                 onClick={handleToggleDocs}
@@ -195,7 +189,6 @@ const RoomDashboard = () => {
                 <span>Docs</span>
               </button>
 
-              {/* AI Companion → right side-panel */}
               <button
                 className={`rd-toolbar-btn ${activePanel === 'ai' ? 'rd-active' : ''}`}
                 onClick={() => handleTogglePanel('ai')}
@@ -206,7 +199,6 @@ const RoomDashboard = () => {
               </button>
             </div>
 
-            {/* Right: End button */}
             <div className="rd-toolbar-group">
               <button
                 className="rd-toolbar-btn rd-danger"
@@ -220,10 +212,8 @@ const RoomDashboard = () => {
           </div>
         </div>
 
-        {/* ── Right Side Panel (Chat | AI) ── */}
         <div className={`rd-side-panel ${activePanel === 'none' ? 'rd-side-panel-enter' : ''}`}>
 
-          {/* Panel Header */}
           <div className="rd-panel-header">
             <span className="rd-panel-title">
               {activePanel === 'chat' ? 'Room Chat' : 'AI Assistant'}
@@ -237,11 +227,9 @@ const RoomDashboard = () => {
             </button>
           </div>
 
-          {/* Panel Body */}
           <div className={`rd-panel-body ${activePanel === 'ai' ? 'rd-panel-body-ai' : ''}`}>
 
             {activePanel === 'chat' ? (
-              /* ── Room Chat ── */
               <>
                 <div className="rd-chat-messages">
                   {chatMessages.length === 0 ? (
@@ -273,7 +261,6 @@ const RoomDashboard = () => {
                 </form>
               </>
             ) : (
-              /* ── AI Assistant (ephemeral, room-scoped, no DB writes) ── */
               <RoomChatPage />
             )}
 
