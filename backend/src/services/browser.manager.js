@@ -107,7 +107,7 @@ function formatUrl(input) {
 
   if (/^[^\s]+\.[^\s]+$/.test(trimmed)) return `https://${trimmed}`;
 
-  return `https://duckduckgo.com/?q=${encodeURIComponent(trimmed)}`;
+  return `https://www.google.com/search?q=${encodeURIComponent(trimmed)}`;
 }
 
 
@@ -170,8 +170,21 @@ function stopScreenshotLoop(session) {
 export async function getOrCreateSession(roomId, io) {
   if (roomSessions.has(roomId)) return roomSessions.get(roomId);
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: VIEWPORT });
+  const browser = await chromium.launch({ 
+    headless: true,
+    args: [
+      '--disable-blink-features=AutomationControlled',
+      '--disable-infobars',
+      '--no-sandbox'
+    ]
+  });
+  const context = await browser.newContext({ 
+    viewport: VIEWPORT,
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+  });
+
+  // Hide webdriver from websites to bypass basic bot detection
+  await context.addInitScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
 
   const initialPage = await context.newPage();
   const tabId = randomUUID();

@@ -7,10 +7,8 @@ import { initBrowserSocket } from './src/services/browser.socket.js'
 
 dbconnect()
 
-// Create HTTP server from Express app (required for Socket.io)
 const httpServer = createServer(app)
 
-// Attach Socket.io with CORS matching the existing Express CORS config
 const io = new Server(httpServer, {
   cors: {
     origin: 'http://localhost:5173',
