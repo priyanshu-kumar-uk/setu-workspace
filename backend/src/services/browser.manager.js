@@ -64,9 +64,9 @@ const NEW_TAB_HTML = `
 </html>
 `;
 const BLOCKED_PATTERNS = [
-  /^file:\/\
-  /^chrome:\/\
-  /^chrome-extension:\/\
+  /^file:\/\//i,
+  /^chrome:\/\//i,
+  /^chrome-extension:\/\//i,
   /^about:/i,
   /localhost/i,
   /127\.0\.0\.1/,
@@ -79,7 +79,7 @@ function isBlockedUrl(url) {
 function formatUrl(input) {
   const trimmed = (input || '').trim();
   if (!trimmed) return null;
-  if (/^https?:\/\
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
   if (/^[^\s]+\.[^\s]+$/.test(trimmed)) return `https://${trimmed}`;
   return `https://www.google.com/search?q=${encodeURIComponent(trimmed)}`;
 }
