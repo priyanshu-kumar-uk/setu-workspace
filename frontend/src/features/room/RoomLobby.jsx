@@ -91,7 +91,7 @@ const RoomLobby = ({ roomId, onJoin }) => {
         </div>
         <div className="lobby-info-card">
           <h1 className="lobby-greeting">Ready to join?</h1>
-          <p className="lobby-subtitle">No one else is here</p>
+
           <div className="lobby-link-box">
             <span className="lobby-link-label">Meeting link</span>
             <input 
