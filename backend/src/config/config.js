@@ -13,6 +13,7 @@ import dotenv from 'dotenv'
     APP_EMAIL : process.env.APP_EMAIL,
     TOKEN : process.env.TOKEN,
     MISTRAL_API_KEY : process.env.MISTRAL_API_KEY,
-    TAVILY_API_KEY : process.env.TAVILY_API_KEY
+    TAVILY_API_KEY : process.env.TAVILY_API_KEY,
+    FRONTEND_URL : process.env.FRONTEND_URL
 }
 export default config
