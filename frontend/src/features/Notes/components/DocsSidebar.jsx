@@ -5,29 +5,23 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useAllDocs, useCreateDoc } from '../hooks/useDocs'
 import SaveStatus from './SaveStatus'
 import './DocsSidebar.css'
-
 const DocsSidebar = ({ isCollapsed, setIsCollapsed, title, onTitleChange, onTitleBlur, saveStatus }) => {
     const navigate = useNavigate()
     const { id: activeDocId } = useParams()
     const { data: docsRes, isLoading } = useAllDocs()
     const createDocMutation = useCreateDoc()
-
     const titleInputRef = useRef(null)
     const lastFocusedId = useRef(null)
-
     useEffect(() => {
         if (title === 'Untitled Document' && activeDocId !== lastFocusedId.current) {
             if (titleInputRef.current) {
-                // Focus and select the text for immediate renaming
                 titleInputRef.current.focus()
                 titleInputRef.current.select()
                 lastFocusedId.current = activeDocId
             }
         }
     }, [activeDocId, title])
-
     const docs = docsRes || []
-
     const handleCreate = () => {
         createDocMutation.mutate(undefined, {
             onSuccess: (res) => {
@@ -35,7 +29,6 @@ const DocsSidebar = ({ isCollapsed, setIsCollapsed, title, onTitleChange, onTitl
             }
         })
     }
-
     return (
         <motion.div
             className="docs-sidebar"
@@ -48,9 +41,7 @@ const DocsSidebar = ({ isCollapsed, setIsCollapsed, title, onTitleChange, onTitl
                     <button className="docs-sidebar-action-btn" onClick={() => navigate('/dashboard/notes')} title="Back to Dashboard">
                         <ArrowLeft size={18} />
                     </button>
-
                     {!isCollapsed && <SaveStatus status={saveStatus} />}
-
                     <button
                         className="docs-sidebar-action-btn"
                         onClick={() => setIsCollapsed(!isCollapsed)}
@@ -70,7 +61,7 @@ const DocsSidebar = ({ isCollapsed, setIsCollapsed, title, onTitleChange, onTitl
                             onBlur={onTitleBlur}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                    e.target.blur() // Trigger blur to save instantly
+                                    e.target.blur() 
                                 }
                             }}
                             placeholder="Untitled Document"
@@ -78,7 +69,6 @@ const DocsSidebar = ({ isCollapsed, setIsCollapsed, title, onTitleChange, onTitl
                     </div>
                 )}
             </div>
-
             <div className="docs-sidebar-actions">
                 <button
                     className={`docs-sidebar-create-btn ${isCollapsed ? 'collapsed' : ''}`}
@@ -100,14 +90,12 @@ const DocsSidebar = ({ isCollapsed, setIsCollapsed, title, onTitleChange, onTitl
                     </AnimatePresence>
                 </button>
             </div>
-
             <div className="docs-sidebar-content">
                 {!isCollapsed && (
                     <div className="docs-sidebar-section-title">
                         Recent Documents
                     </div>
                 )}
-                
                 {isLoading ? (
                     <div className="docs-sidebar-loading">
                         {isCollapsed ? "..." : "Loading..."}
@@ -143,5 +131,4 @@ const DocsSidebar = ({ isCollapsed, setIsCollapsed, title, onTitleChange, onTitl
         </motion.div>
     )
 }
-
 export default DocsSidebar

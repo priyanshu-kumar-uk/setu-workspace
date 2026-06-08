@@ -232,6 +232,13 @@
 }
 
 /* ── Loading / Error States ───────────────────────────────── */
+
+/* Hide navigation when the parent dashboard is in fullscreen override mode */
+.is-browser-fullscreen .vb-tab-strip,
+.is-browser-fullscreen .vb-nav-bar {
+  display: none !important;
+}
+
 .vb-loading {
   display: flex;
   flex-direction: column;

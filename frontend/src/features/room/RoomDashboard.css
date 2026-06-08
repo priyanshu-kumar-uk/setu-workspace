@@ -36,19 +36,20 @@
   box-sizing: border-box;
 }
 
-/* Main Content Area (The Stage) */
-.rd-stage-area {
-  flex: 1;
-  width: 100%;
+/* Main Content Area Wrapper */
+.rd-content-wrapper {
   display: flex;
-  gap: 0;
-  overflow: hidden;
-  height: 100vh;
+  flex-direction: row;
+  width: 100vw;
+  height: calc(100vh - 80px); /* Leaves exact space for the fixed bottom toolbar */
+  overflow: hidden; /* CRITICAL: Prevents horizontal scrolling */
+  background: #202124;
 }
 
 /* Central Workspace Area (Canvas) */
 .rd-workspace {
   flex: 1;
+  min-width: 0; /* CRITICAL: allows flex child to shrink below its content size */
   height: 100%;
   background-color: #000000;
   border: none;
@@ -59,55 +60,106 @@
   overflow: hidden;
 }
 
+/* 3-Column Layout Wrappers */
+.rd-workspace-content {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.rd-col-a {
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  transition: flex-basis 0.3s cubic-bezier(0.4, 0, 0.2, 1), grid-template-columns 0.3s ease-in-out;
+}
+
+.rd-col-b.rd-video-stack {
+  width: 300px;
+  min-width: 280px;
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  overflow-y: auto;
+  background-color: #000000;
+  border-left: 1px solid var(--rd-border);
+  flex-shrink: 0;
+  contain: layout paint;
+}
+
+.rd-video-stack .rd-video-container {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  flex-shrink: 0;
+}
+
+/* Fullscreen Mode Override */
+.rd-workspace.is-browser-fullscreen .rd-toolbar {
+  display: none !important;
+}
+
 /* Green Active Speaker/Share Border */
 .rd-workspace.rd-active-share {
   border: 2px solid var(--rd-active-green);
   box-shadow: 0 0 12px rgba(34, 197, 94, 0.2);
 }
 
-/* Video Conference Grid System */
+/* Adaptive Video Conference Grid System */
 .rd-video-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
   gap: 16px;
   padding: 16px;
   width: 100%;
   height: 100%;
-  background-color: #000000;
-}
-
-.rd-video-tile {
-  background-color: #0d0d0e;
-  border: 1px solid var(--rd-border);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
+  box-sizing: border-box;
   align-items: center;
   justify-content: center;
+  background-color: #000000;
+  contain: layout paint;
+  transition: flex-basis 0.3s cubic-bezier(0.4, 0, 0.2, 1), grid-template-columns 0.3s ease-in-out;
+}
+
+/* 1 Participant */
+.rd-grid-1 { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+/* 2 Participants */
+.rd-grid-2 { grid-template-columns: repeat(2, 1fr); grid-template-rows: 1fr; }
+/* 3 Participants - 2-col top row, 1 centred below */
+.rd-grid-3 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+.rd-grid-3 .rd-video-container:last-child { grid-column: 1 / -1; max-width: 50%; justify-self: center; }
+/* 4 Participants - perfect 2×2 */
+.rd-grid-4 { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+
+.rd-video-container {
   position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #4c664d;
+  border-radius: 12px;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease-in-out;
 }
 
-.rd-video-tile.rd-active-speaker {
-  border-color: var(--rd-active-green);
-  box-shadow: 0 0 10px rgba(34, 197, 94, 0.15);
+.rd-video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1);
 }
 
-.rd-video-avatar {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-color: var(--rd-btn-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--rd-text-primary);
-  border: 1px solid var(--rd-border);
-}
-
-.rd-video-name {
+.rd-video-label {
   position: absolute;
   bottom: 12px;
   left: 12px;
@@ -115,8 +167,67 @@
   font-weight: 500;
   color: var(--rd-text-secondary);
   background-color: rgba(0, 0, 0, 0.6);
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+}
+
+.rd-video-container.rd-speaking-active {
+  box-shadow: inset 0 0 0 3px #3b82f6;
+}
+
+.rd-speaking-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 8px;
+}
+
+.rd-speaking-dots span {
+  width: 4px;
+  height: 4px;
+  background-color: #3b82f6;
+  border-radius: 50%;
+  animation: speaking-dot-bounce 1s infinite ease-in-out both;
+}
+
+.rd-speaking-dots span:nth-child(1) { animation-delay: -0.32s; }
+.rd-speaking-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes speaking-dot-bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-4px); }
+}
+
+.rd-video-off-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #4c664d;
+  z-index: 5;
+}
+
+/* Avatar circle for video-off state */
+.rd-avatar-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background-color: #e8eaed;
+  color: #202124;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 700;
 }
 
 /* Empty states */
@@ -136,6 +247,7 @@
 /* Right Side Panel - Sidebar Container */
 .rd-side-panel {
   width: 360px;
+  flex-shrink: 0; /* CRITICAL: prevents panel from shrinking */
   background-color: var(--rd-card-bg);
   border-left: 1px solid var(--rd-border);
   border-top: none;
@@ -144,18 +256,26 @@
   border-radius: 0;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Transition classes for right sidebar */
-.rd-side-panel-enter {
-  width: 0;
+/* Sidebar hidden state */
+.rd-side-panel-hidden {
+  width: 0 !important;
+  min-width: 0 !important;
   opacity: 0;
-  margin-left: 0;
+  overflow: hidden;
   border-color: transparent;
   pointer-events: none;
+  padding: 0;
+}
+
+/* Workspace shrinks when panel is open to preserve aspect ratios */
+.rd-workspace-shrunk {
+  flex: 1;
+  /* The panel takes a fixed 360px; flex handles the rest */
 }
 
 /* Side Panel Header */
@@ -441,25 +561,21 @@
 
 /* Bottom Persistent Toolbar nested inside Workspace */
 .rd-toolbar {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 70px;
-  background-color: #0c0c0d; /* Solid dark Zoom style */
-  border-top: 1px solid var(--rd-border);
-  display: flex;
+  height: 84px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   padding: 0 24px;
-  z-index: 100;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-}
-
-.rd-toolbar.rd-toolbar-hidden {
-  transform: translateY(100%);
-  opacity: 0;
-  pointer-events: none;
+  z-index: 1000;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.2);
 }
 
 /* Toolbar Groups */
@@ -469,71 +585,103 @@
   gap: 8px;
 }
 
-/* Zoom-style Transparent Toolbar Buttons */
+.rd-toolbar-group:first-child {
+  justify-self: start;
+}
+
+.rd-toolbar-group:last-child {
+  justify-self: end;
+}
+
+/* Linear/Slack style Toolbar Buttons */
 .rd-toolbar-btn {
   background: transparent;
-  border: none;
-  color: var(--rd-text-secondary);
+  border: 1px solid transparent;
+  color: #94a3b8;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
-  transition: all 0.15s ease-in-out;
-  padding: 6px 10px;
-  border-radius: 6px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 8px 12px;
+  border-radius: 12px;
   font-size: 11px;
-  font-weight: 500;
-  min-width: 60px;
+  font-weight: 600;
+  min-width: 68px;
+  letter-spacing: 0.02em;
 }
 
 .rd-toolbar-btn:hover {
-  color: var(--rd-text-primary);
-  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
 }
 
 .rd-toolbar-btn svg {
-  color: var(--rd-text-primary);
+  color: #94a3b8;
+  transition: all 0.2s ease;
 }
 
 .rd-toolbar-btn span {
-  color: var(--rd-text-secondary);
+  color: #94a3b8;
+  transition: all 0.2s ease;
 }
 
+.rd-toolbar-btn:hover svg,
 .rd-toolbar-btn:hover span {
-  color: var(--rd-text-primary);
+  color: #ffffff;
 }
 
 /* Active Companion or Chat Sidebar buttons */
 .rd-toolbar-btn.rd-active {
-  color: var(--rd-active-green);
-  background-color: rgba(34, 197, 94, 0.08);
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.2);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
 }
 
-.rd-toolbar-btn.rd-active span {
-  color: var(--rd-active-green);
-}
-
+.rd-toolbar-btn.rd-active span,
 .rd-toolbar-btn.rd-active svg {
-  color: var(--rd-active-green);
+  color: #38bdf8;
+}
+
+/* Sharing Active State */
+.rd-toolbar-btn.rd-sharing-active {
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.15);
+}
+
+.rd-toolbar-btn.rd-sharing-active span,
+.rd-toolbar-btn.rd-sharing-active svg {
+  color: #22c55e;
 }
 
 /* Leave/End Meeting btn */
 .rd-toolbar-btn.rd-danger {
-  color: var(--rd-alert-red);
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
-.rd-toolbar-btn.rd-danger svg {
-  color: var(--rd-alert-red);
-}
-
+.rd-toolbar-btn.rd-danger svg,
 .rd-toolbar-btn.rd-danger span {
-  color: var(--rd-alert-red);
+  color: #ef4444;
 }
 
 .rd-toolbar-btn.rd-danger:hover {
-  background-color: rgba(239, 68, 68, 0.12);
+  background: #ef4444;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.rd-toolbar-btn.rd-danger:hover svg,
+.rd-toolbar-btn.rd-danger:hover span {
+  color: #ffffff;
 }
 
 /* ── Panel body — zero padding when AI fills the slot ─────────────── */
@@ -550,4 +698,517 @@
 .rd-side-panel {
   z-index: 10;
   position: relative;
+}
+
+/* ── People Panel UI ── */
+.rd-people-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.rd-add-people-btn {
+  background-color: #004a77;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.rd-add-people-btn:hover {
+  background-color: #003d61;
+}
+
+.rd-people-search {
+  position: relative;
+  width: 100%;
+}
+
+.rd-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rd-text-muted);
+}
+
+.rd-search-input {
+  width: 100%;
+  background-color: #0c0c0d;
+  border: 1px solid var(--rd-border);
+  border-radius: 6px;
+  padding: 10px 12px 10px 36px;
+  color: var(--rd-text-primary);
+  font-size: 13px;
+  outline: none;
+}
+
+.rd-search-input:focus {
+  border-color: var(--rd-border-hover);
+}
+
+.rd-people-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.rd-people-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--rd-text-secondary);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rd-border);
+  margin-bottom: 8px;
+}
+
+.rd-people-count {
+  background-color: var(--rd-btn-bg);
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+
+.rd-people-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rd-person-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.rd-person-item:hover {
+  background-color: var(--rd-btn-bg);
+}
+
+.rd-person-avatar {
+  flex-shrink: 0;
+}
+
+.rd-avatar-placeholder {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e8eaed;
+  color: #202124;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.rd-person-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.rd-person-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rd-text-primary);
+}
+
+.rd-person-you {
+  color: var(--rd-text-muted);
+  font-weight: 400;
+}
+
+.rd-person-role {
+  font-size: 11px;
+  color: var(--rd-text-muted);
+}
+
+.rd-person-action {
+  background: transparent;
+  border: none;
+  color: var(--rd-text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rd-person-action:hover {
+  background-color: var(--rd-border);
+  color: var(--rd-text-primary);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MODULE 1 & 2: Share Modal
+   ───────────────────────────────────────────────────────────────────────────── */
+.rd-share-modal-anchor {
+  position: relative;
+  display: flex;
+}
+
+.rd-share-modal {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--rd-card-bg);
+  border: 1px solid var(--rd-border);
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: 120;
+}
+
+.rd-share-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--rd-text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.rd-share-option:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.rd-share-option .rd-share-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MODULE 4: Screen-share video — un-mirror & contain
+   ───────────────────────────────────────────────────────────────────────────── */
+.rd-video-container.rd-screen-share video {
+  transform: scaleX(1);
+  object-fit: contain;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MODULE 5: Google-Meet-style Spotlight Layout (80/20 reflow)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Gallery — standard auto-fit grid (the default) */
+.rd-gallery-layout {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  contain: layout paint;
+}
+
+/* Spotlight — Exact Google Meet CSS Grid Split */
+.rd-spotlight-layout {
+  display: grid;
+  grid-template-columns: 1fr minmax(200px, 25%);
+  gap: 16px;
+  padding: 16px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background-color: #000000;
+}
+
+/* Main viewport — Left Side Shared Screen */
+.rd-spotlight-main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: #202124;
+}
+
+.rd-spotlight-main .rd-video-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure the main presentation video is contained correctly in the main spot */
+.rd-spotlight-main .rd-video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
+  transform: scaleX(1) !important;
+  background: #202124;
+}
+
+/* Adaptive Participants Sidebar - Right Side */
+.rd-spotlight-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  overflow-y: auto;
+  padding-right: 4px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Dynamic width scaling based on columns removed in favor of direct flex layout */
+.rd-spotlight-sidebar.rd-sidebar-grid-1 {
+  /* No-op: layout handled by flex container */
+}
+
+.rd-spotlight-sidebar.rd-sidebar-grid-2 {
+  /* No-op: layout handled by flex container */
+}
+
+.rd-spotlight-sidebar .rd-sidebar-tile-wrapper {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background-color: var(--rd-card-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.rd-spotlight-sidebar .rd-video-container {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: unset;
+  border-radius: 10px;
+}
+
+/* +X More Button Tile */
+.rd-more-tile {
+  cursor: pointer;
+  background-color: var(--rd-btn-bg) !important;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.rd-more-tile:hover {
+  background-color: var(--rd-btn-hover) !important;
+}
+
+.rd-more-tile-content {
+  color: var(--rd-text-primary);
+  font-size: 15px;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Responsive Rules for Tablet & Mobile */
+@media (max-width: 1024px) {
+  /* Tablet: Collapsible Sidebar (hides behind a toggle or moves to bottom) 
+     For now, we let it flow naturally by changing the layout from row to column if needed, 
+     or just scaling down. */
+  .rd-spotlight-layout {
+    flex-direction: column;
+  }
+  .rd-spotlight-sidebar {
+    width: 100% !important;
+    max-width: 100%;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    max-height: 200px;
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile: Participant Drawer */
+  .rd-spotlight-sidebar {
+    display: none; /* Hide entirely on mobile, rely on "People" panel drawer */
+  }
+}
+
+/* ── Sharing active indicator on toolbar button ─────────────────────────── */
+.rd-toolbar-btn.rd-sharing-active {
+  color: #22c55e;
+}
+.rd-toolbar-btn.rd-sharing-active svg {
+  color: #22c55e;
+  animation: rd-pulse-share 2s ease-in-out infinite;
+}
+.rd-toolbar-btn.rd-sharing-active span {
+  color: #22c55e;
+}
+
+@keyframes rd-pulse-share {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   MODULE 3: Presenter PiP Layout (Google Meet Host View)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+/* Full-stage presentation container */
+.rd-presentation-layout {
+  position: relative;
+  width: 100%;
+  /* Keep space for the 80px toolbar at the bottom */
+  height: calc(100vh - 80px); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #202124; 
+  padding: 24px; /* Give it some breathing room from the edges */
+}
+
+/* The shared screen inside the presentation takes full space with correct aspect ratio */
+.rd-presentation-layout > .rd-video-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.rd-presentation-layout > .rd-video-container video {
+  object-fit: contain !important;
+  transform: scaleX(1) !important;
+  background: #202124;
+}
+
+/* Floating PiP — presenter's own camera, positioned above the 80px toolbar */
+.rd-pip-wrapper {
+  position: fixed;
+  bottom: 96px;
+  right: 16px;
+  width: 180px;
+  aspect-ratio: 16 / 9;
+  z-index: 500;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  border: 2px solid #3c4043;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rd-pip-wrapper:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.rd-pip-wrapper .rd-video-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+}
+
+.rd-pip-wrapper .rd-video-container video {
+  object-fit: cover;
+}
+
+/* Hidden streams — visually removed but audio stays alive */
+.rd-hidden-streams {
+  display: none !important;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  position: absolute;
+  pointer-events: none;
+}
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Graceful Offline Overlay
+   ───────────────────────────────────────────────────────────────────────────── */
+.rd-offline-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.rd-offline-pulse-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.15);
+  margin-bottom: 24px;
+  animation: rd-offline-pulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rd-offline-icon {
+  color: #ef4444; /* Red warning */
+}
+
+.rd-offline-title {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.02em;
+}
+
+.rd-offline-text {
+  color: #94a3b8;
+  font-size: 16px;
+  max-width: 400px;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@keyframes rd-offline-pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 24px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
 }

@@ -3,16 +3,14 @@ import { Plus, Settings, FileText } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useAllDocs, useCreateDoc, useDeleteDoc } from '../hooks/useDocs'
 import DocCard from '../components/DocCard'
+import { SkeletonList } from '../../../components/ui/Skeletons/Skeleton'
 import './NotesPage.css'
-
 const NotesPage = () => {
     const navigate = useNavigate()
     const { data: response, isLoading } = useAllDocs()
     const createDocMutation = useCreateDoc()
     const deleteDocMutation = useDeleteDoc()
-
     const docs = response || []
-
     const handleCreate = () => {
         createDocMutation.mutate(undefined, {
             onSuccess: (res) => {
@@ -21,20 +19,17 @@ const NotesPage = () => {
             }
         })
     }
-
     const handleOpen = (id) => {
         navigate(`/docs/${id}`)
     }
-
     const handleDelete = (id) => {
         deleteDocMutation.mutate(id)
     }
-
     return (
         <div className="docs-dashboard">
-            {/* Main Content */}
+            {}
             <main className="docs-main">
-                {/* Create Section */}
+                {}
                 <section className="docs-create-section">
                     <div className="docs-create-container">
                         <h2 className="docs-section-title">Start a new document</h2>
@@ -48,21 +43,13 @@ const NotesPage = () => {
                         </div>
                     </div>
                 </section>
-
-                {/* Recent Documents Section */}
+                {}
                 <section className="docs-recent-section">
                     <div className="docs-recent-container">
                         <h2 className="docs-section-title">Recent documents</h2>
-                        
                         {isLoading ? (
                             <div className="docs-list">
-                                {[1, 2, 3].map(n => (
-                                    <div key={n} className="doc-list-skeleton">
-                                        <div className="skeleton-icon-circle"></div>
-                                        <div className="skeleton-line-title"></div>
-                                        <div className="skeleton-line-date"></div>
-                                    </div>
-                                ))}
+                                <SkeletonList count={3} />
                             </div>
                         ) : docs.length > 0 ? (
                             <div className="docs-list">
@@ -94,5 +81,4 @@ const NotesPage = () => {
         </div>
     )
 }
-
 export default NotesPage

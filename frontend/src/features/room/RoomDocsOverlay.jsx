@@ -23,27 +23,22 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
-
 import { useDoc, useAllDocs, useCreateDoc } from "../Notes/hooks/useDocs";
 import { useAutosave } from "../Notes/hooks/useAutosave";
 import EditorToolbar from "../Notes/components/EditorToolbar";
 import BubbleMenuBar from "../Notes/components/BubbleMenuBar";
 import SaveStatus from "../Notes/components/SaveStatus";
 import "./RoomDocsOverlay.css";
-
 const DEFAULT_W = 900;
 const DEFAULT_H = 580;
 const MIN_W = 560;
 const MIN_H = 360;
-
-const RoomDocsOverlay = ({ roomId, onClose }) => {
+const RoomDocsOverlay = ({ roomId, onClose, isVisible }) => {
   const dragControls = useDragControls();
-
   const [size, setSize] = useState({ width: DEFAULT_W, height: DEFAULT_H });
   const resizeStartRef = useRef(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
   const sessionKey = roomId ? `setu-room-doc-${roomId}` : null;
   const [activeDocId, setActiveDocId] = useState(() =>
     sessionKey ? sessionStorage.getItem(sessionKey) || null : null,
@@ -52,7 +47,6 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
     if (sessionKey && activeDocId)
       sessionStorage.setItem(sessionKey, activeDocId);
   }, [activeDocId, sessionKey]);
-
   const {
     data: allDocs = [],
     isLoading: docsLoading,
@@ -61,35 +55,21 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
   useEffect(() => {
     refetchAll();
   }, []); 
-
   const createDocMutation = useCreateDoc();
   const handleCreateDoc = () =>
     createDocMutation.mutate(undefined, {
       onSuccess: (res) => setActiveDocId(res.data._id),
     });
-
   const { data: docData, isLoading: docLoading } = useDoc(activeDocId);
-
-  // ── Autosave refs
   const { status: saveStatus, triggerSave } = useAutosave(activeDocId, 1500);
   const { triggerSave: triggerTitleSave } = useAutosave(activeDocId, 800);
-
-  // Always-current ref so the editor onUpdate closure never goes stale
   const triggerSaveRef = useRef(triggerSave);
   useEffect(() => {
     triggerSaveRef.current = triggerSave;
   }, [triggerSave]);
-
-  // ── Hydration tracking 
-  // `loadedDocIdRef` records WHICH docId is currently rendered in the editor.
-  // Compared against `activeDocId` to decide reset vs. hydrate.
-  // This ref approach eliminates the need to add `editor` to effect deps.
   const loadedDocIdRef = useRef(null);
-  // `canSaveRef` gates onUpdate so autosave never fires during hydration.
   const canSaveRef = useRef(false);
-  // Stable ref to the editor — keeps effects from listing `editor` as a dep.
   const editorRef = useRef(null);
-
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -112,50 +92,28 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
         triggerSaveRef.current({ contentJSON: ed.getJSON() });
     },
   });
-
-  // Keep editorRef in sync — single stable subscription
   useEffect(() => {
     editorRef.current = editor;
   }, [editor]);
-
   const [title, setTitle] = useState("Untitled Document");
-
-  // ── Effect A — Reset editor when user picks a different document ───
-  // Dep: [activeDocId] only. We read editorRef.current instead of `editor`
-  // to avoid the effect re-firing on unrelated editor identity changes.
   useEffect(() => {
-    // Already showing this doc — nothing to reset
     if (loadedDocIdRef.current === activeDocId) return;
-
     canSaveRef.current = false;
-    loadedDocIdRef.current = null; // mark as "not yet loaded"
+    loadedDocIdRef.current = null; 
     setTitle("Untitled Document");
-
     const ed = editorRef.current;
     if (ed && !ed.isDestroyed) ed.commands.setContent("", false);
   }, [activeDocId]);
-
-  // Dep: [docData, activeDocId] only.
-  // `editorRef.current` is used in place of `editor` to avoid making
-  // this effect re-run on editor identity changes (which happen on
-  // every unrelated state update inside this component).
   useEffect(() => {
-    // Nothing to load yet
     if (!docData || !activeDocId) return;
-    // Already loaded exactly this doc
     if (loadedDocIdRef.current === activeDocId) return;
-
     const ed = editorRef.current;
     if (!ed || ed.isDestroyed) return;
-
-    // Load content — false = no onUpdate event (prevents spurious autosave)
     ed.commands.setContent(docData.contentJSON || "", false);
     setTitle(docData.title || "Untitled Document");
-
-    loadedDocIdRef.current = activeDocId; // mark as loaded
-    canSaveRef.current = true; // unlock autosave
+    loadedDocIdRef.current = activeDocId; 
+    canSaveRef.current = true; 
   }, [docData, activeDocId]);
-
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
     triggerTitleSave({ title: e.target.value });
@@ -166,7 +124,6 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
       triggerTitleSave({ title: "Untitled Document" });
     }
   };
-
   const handleResizeStart = useCallback(
     (e) => {
       e.preventDefault();
@@ -195,22 +152,28 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
     },
     [size],
   );
-
   return (
     <motion.div
       className="rd-docs-overlay"
-      style={{ width: size.width, height: isMinimized ? 44 : size.height }}
+      style={{ 
+        width: size.width, 
+        height: isMinimized ? 44 : size.height,
+        pointerEvents: isVisible ? "auto" : "none"
+      }}
       drag
       dragControls={dragControls}
       dragListener={false}
       dragMomentum={false}
       dragElastic={0}
       initial={{ opacity: 0, scale: 0.97, y: -12 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95, y: -8 }}
+      animate={{ 
+        opacity: isVisible ? 1 : 0, 
+        scale: isVisible ? 1 : 0.95, 
+        y: isVisible ? 0 : -8 
+      }}
       transition={{ duration: 0.15, ease: [0.4, 0, 0.2, 1] }}
     >
-      {/* ── Title bar ── */}
+      {}
       <div
         className="rd-docs-titlebar"
         onPointerDown={(e) => dragControls.start(e)}
@@ -253,8 +216,7 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
           </button>
         </div>
       </div>
-
-      {/* ── Body ── */}
+      {}
       <AnimatePresence>
         {!isMinimized && (
           <motion.div
@@ -264,7 +226,7 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.1 }}
           >
-            {/* ── Sidebar ── */}
+            {}
             <div
               className={`rd-docs-sidebar ${isSidebarCollapsed ? "collapsed" : ""}`}
               onPointerDown={(e) => e.stopPropagation()}
@@ -291,11 +253,9 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
                   )}
                 </button>
               </div>
-
               {!isSidebarCollapsed && (
                 <div className="rd-docs-sidebar-label">Documents</div>
               )}
-
               <div className="rd-docs-sidebar-list">
                 {docsLoading ? (
                   <div className="rd-docs-sidebar-empty">Loading…</div>
@@ -322,8 +282,7 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
                 )}
               </div>
             </div>
-
-            {/* ── Editor pane ── */}
+            {}
             <div
               className="rd-docs-editor-pane"
               onPointerDown={(e) => e.stopPropagation()}
@@ -357,8 +316,7 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
                 )}
               </div>
             </div>
-
-            {/* SE resize corner */}
+            {}
             <div
               className="rd-docs-resize-handle"
               onPointerDown={handleResizeStart}
@@ -369,5 +327,4 @@ const RoomDocsOverlay = ({ roomId, onClose }) => {
     </motion.div>
   );
 };
-
 export default RoomDocsOverlay;

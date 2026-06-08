@@ -1,18 +1,1 @@
-// Error inbuild class of node.js
-class ApiError extends Error{  
-    constructor(status , message  = "something went wrong",data = null,stack = ""){
-        super(message)
-        this.status = status
-        this.message = message
-        this.success = false
-        this.data = data
-        
-        if (stack) {
-            this.stack = stack;
-        } else {
-            Error.captureStackTrace(this, this.constructor);
-        }
-    }
-}
-
-export {ApiError}
+class ApiError extends Error{      constructor(status , message  = "something went wrong",data = null,stack = ""){        super(message)        this.status = status        this.message = message        this.success = false        this.data = data        if (stack) {            this.stack = stack;        } else {            Error.captureStackTrace(this, this.constructor);        }    }}export {ApiError}

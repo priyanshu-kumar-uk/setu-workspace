@@ -2,18 +2,15 @@ import React from "react";
 import { RefreshCw, Copy } from "lucide-react";
 import MarkdownRenderer from "./MarkdownRenderer";
 import "./MessageBubble.css";
-
 const MessageBubble = ({ message, onRetry }) => {
     const isUser = message.role === "user";
     const isAssistant = message.role === "assistant";
-
     const handleCopy = () => {
         navigator.clipboard.writeText(message.content);
     };
-
     return (
         <div className={`msg-row ${isUser ? "msg-row-user" : "msg-row-assistant"}`}>
-            {/* Avatar */}
+            {}
             {isAssistant && (
                 <div className="msg-avatar msg-avatar-ai">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -21,9 +18,8 @@ const MessageBubble = ({ message, onRetry }) => {
                     </svg>
                 </div>
             )}
-
             <div className={`msg-bubble ${isUser ? "msg-bubble-user" : "msg-bubble-assistant"}`}>
-                {/* Content */}
+                {}
                 {isUser ? (
                     <p className="msg-text-user">{message.content}</p>
                 ) : (
@@ -33,15 +29,13 @@ const MessageBubble = ({ message, onRetry }) => {
                         ) : message.isStreaming ? (
                             <span className="msg-cursor" />
                         ) : null}
-
-                        {/* Streaming cursor */}
+                        {}
                         {message.isStreaming && message.content && (
                             <span className="msg-cursor" />
                         )}
                     </>
                 )}
-
-                {/* Error state */}
+                {}
                 {message.error && (
                     <div className="msg-error">
                         <span className="msg-error-text">
@@ -55,8 +49,7 @@ const MessageBubble = ({ message, onRetry }) => {
                         )}
                     </div>
                 )}
-
-                {/* Actions (only for completed assistant messages) */}
+                {}
                 {isAssistant && !message.isStreaming && !message.error && message.content && (
                     <div className="msg-actions">
                         <button className="msg-action-btn" onClick={handleCopy} title="Copy" type="button">
@@ -68,5 +61,4 @@ const MessageBubble = ({ message, onRetry }) => {
         </div>
     );
 };
-
 export default MessageBubble;

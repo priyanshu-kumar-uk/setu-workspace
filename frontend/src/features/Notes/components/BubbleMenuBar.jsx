@@ -2,10 +2,8 @@ import React from 'react'
 import { BubbleMenu } from '@tiptap/react/menus'
 import { Bold, Italic, Underline, Strikethrough, Link } from 'lucide-react'
 import './BubbleMenuBar.css'
-
 const BubbleMenuBar = ({ editor }) => {
     if (!editor) return null
-
     return (
         <BubbleMenu editor={editor} tippyOptions={{ duration: 100 }} className="bubble-menu">
             <button
@@ -51,5 +49,4 @@ const BubbleMenuBar = ({ editor }) => {
         </BubbleMenu>
     )
 }
-
 export default BubbleMenuBar

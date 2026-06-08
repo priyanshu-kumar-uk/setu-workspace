@@ -16,7 +16,6 @@ import { TextStyle } from '@tiptap/extension-text-style'
 import Highlight from '@tiptap/extension-highlight'
 import Heading from '@tiptap/extension-heading'
 import html2pdf from 'html2pdf.js'
-
 import { useDoc } from '../hooks/useDocs'
 import { useAutosave } from '../hooks/useAutosave'
 import EditorToolbar from '../components/EditorToolbar'
@@ -24,21 +23,17 @@ import BubbleMenuBar from '../components/BubbleMenuBar'
 import DocsSidebar from '../components/DocsSidebar'
 import SettingsModal from '../components/SettingsModal'
 import './DocsEditorPage.css'
-
 const DocsEditorPage = () => {
     const { id } = useParams()
     const navigate = useNavigate()
     const { data: docRes, isLoading } = useDoc(id)
     const { status, triggerSave } = useAutosave(id, 1500)
     const { status: titleStatus, triggerSave: triggerTitleSave } = useAutosave(id, 1000)
-
     const doc = docRes
     const [title, setTitle] = useState('Untitled Document')
     const [isHydrated, setIsHydrated] = useState(false)
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
     const [isSettingsOpen, setIsSettingsOpen] = useState(false)
-
-    // ... editor setup remains exactly same ...
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -62,37 +57,30 @@ const DocsEditorPage = () => {
             }
         },
     })
-
     useEffect(() => {
-        // Reset hydration and editor state when document ID changes
         setIsHydrated(false)
         setTitle('Loading...')
         if (editor && !editor.isDestroyed) {
             editor.commands.setContent('')
         }
     }, [id, editor])
-
     useEffect(() => {
         if (doc && editor && !editor.isDestroyed && !isHydrated) {
             setTitle(doc.title)
-            // Ensure we set content even if it's null (to clear any leaked state)
             editor.commands.setContent(doc.contentJSON || '')
             setIsHydrated(true)
         }
     }, [doc, editor, isHydrated])
-
     const handleTitleChange = (e) => {
         setTitle(e.target.value)
         triggerTitleSave({ title: e.target.value })
     }
-
     const handleTitleBlur = () => {
         if (!title.trim()) {
             setTitle('Untitled Document')
             triggerTitleSave({ title: 'Untitled Document' })
         }
     }
-
     const exportToPDF = () => {
         if (!editor) return
         const content = editor.getHTML()
@@ -103,15 +91,12 @@ const DocsEditorPage = () => {
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
         }
-        
         const element = document.createElement('div')
         element.innerHTML = content
         element.style.padding = '20px'
         element.style.fontFamily = 'Inter, sans-serif'
-        
         html2pdf().set(opt).from(element).save()
     }
-
     if (isLoading) {
         return (
             <div className="docs-editor-skeleton">
@@ -123,7 +108,6 @@ const DocsEditorPage = () => {
             </div>
         )
     }
-
     return (
         <div className="docs-workspace-container">
             <DocsSidebar 
@@ -136,13 +120,11 @@ const DocsEditorPage = () => {
             />
             <div className="docs-editor-layout">
             <header className="docs-editor-header">
-                {/* Empty left div strictly to maintain flexbox center alignment */}
+                {}
                 <div className="docs-editor-header-left"></div>
-                
                 <div className="docs-editor-header-center">
                     <EditorToolbar editor={editor} />
                 </div>
-                
                 <div className="docs-editor-header-right">
                     <button className="docs-export-btn" onClick={() => setIsSettingsOpen(true)} title="Settings">
                         <Settings size={16} />
@@ -154,7 +136,6 @@ const DocsEditorPage = () => {
                     </button>
                 </div>
             </header>
-
             <main className="docs-editor-main">
                 <div className="docs-editor-page-wrapper">
                     {editor && <BubbleMenuBar editor={editor} />}
@@ -166,5 +147,4 @@ const DocsEditorPage = () => {
         </div>
     )
 }
-
 export default DocsEditorPage

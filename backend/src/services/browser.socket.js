@@ -1,10 +1,3 @@
-/**
- * browser.socket.js
- * Socket.io event wiring for the virtual browser feature.
- * Uses the `/browser` namespace — fully isolated from any
- * future WebRTC or chat socket namespaces.
- */
-
 import {
   getOrCreateSession,
   createTab,
@@ -19,34 +12,21 @@ import {
   removeUser,
   getTabsState,
 } from './browser.manager.js';
-
-/**
- * Attach browser socket handlers to the Socket.io server.
- * Call once from server.js after creating the io instance.
- */
 export function initBrowserSocket(io) {
   const browserNs = io.of('/browser');
-
   browserNs.on('connection', async (socket) => {
     const roomId = socket.handshake.query.roomId;
-
+    const start_url = socket.handshake.query.start_url || 'https://www.google.com';
     if (!roomId) {
       socket.emit('browser:error', { message: 'Missing roomId' });
       socket.disconnect(true);
       return;
     }
-
     console.log(`[BrowserSocket] User ${socket.id} joining room: ${roomId}`);
-
-    // Join the Socket.io room
     socket.join(roomId);
-
     try {
-      // Get or create the browser session for this room
-      const session = await getOrCreateSession(roomId, io);
+      const session = await getOrCreateSession(roomId, io, start_url);
       addUser(roomId, socket.id);
-
-      // Send current state to the joining user
       const tabsState = await getTabsState(roomId);
       if (tabsState) {
         socket.emit('browser:tabs-state', tabsState);
@@ -55,8 +35,6 @@ export function initBrowserSocket(io) {
       console.error(`[BrowserSocket] Failed to initialise session for room ${roomId}:`, err.message);
       socket.emit('browser:error', { message: 'Failed to start browser session' });
     }
-
-
     socket.on('browser:create-tab', async () => {
       try {
         const result = await createTab(roomId);
@@ -65,7 +43,6 @@ export function initBrowserSocket(io) {
         socket.emit('browser:error', { message: err.message });
       }
     });
-
     socket.on('browser:close-tab', async ({ tabId }) => {
       try {
         const tabsState = await closeTab(roomId, tabId);
@@ -76,7 +53,6 @@ export function initBrowserSocket(io) {
         socket.emit('browser:error', { message: err.message });
       }
     });
-
     socket.on('browser:switch-tab', async ({ tabId }) => {
       try {
         const tabsState = await switchTab(roomId, tabId);
@@ -87,8 +63,6 @@ export function initBrowserSocket(io) {
         socket.emit('browser:error', { message: err.message });
       }
     });
-
-
     socket.on('browser:navigate', async ({ tabId, url }) => {
       try {
         const result = await navigateTab(roomId, tabId, url);
@@ -97,7 +71,6 @@ export function initBrowserSocket(io) {
         socket.emit('browser:error', { message: err.message });
       }
     });
-
     socket.on('browser:back', async ({ tabId }) => {
       try {
         const result = await goBack(roomId, tabId);
@@ -106,7 +79,6 @@ export function initBrowserSocket(io) {
         socket.emit('browser:error', { message: err.message });
       }
     });
-
     socket.on('browser:forward', async ({ tabId }) => {
       try {
         const result = await goForward(roomId, tabId);
@@ -115,7 +87,6 @@ export function initBrowserSocket(io) {
         socket.emit('browser:error', { message: err.message });
       }
     });
-
     socket.on('browser:refresh', async ({ tabId }) => {
       try {
         const result = await refreshTab(roomId, tabId);
@@ -124,17 +95,12 @@ export function initBrowserSocket(io) {
         socket.emit('browser:error', { message: err.message });
       }
     });
-
-
     socket.on('browser:interact', async ({ tabId, action }) => {
       try {
         await handleInteraction(roomId, tabId, action);
       } catch {
-        // Silently ignore interaction errors
       }
     });
-
-
     socket.on('disconnect', async () => {
       console.log(`[BrowserSocket] User ${socket.id} disconnected from room: ${roomId}`);
       try {
@@ -144,6 +110,5 @@ export function initBrowserSocket(io) {
       }
     });
   });
-
   console.log('[BrowserSocket] /browser namespace initialised');
 }

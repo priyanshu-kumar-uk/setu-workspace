@@ -3,22 +3,18 @@ import { streamWithTools } from "../providers/ai.provider.js";
 import { asyncHandler } from "../utils/asynchandlar.js";
 import { ApiResponse } from "../utils/api.res.js";
 import { ApiError } from "../utils/api.error.js";
-
 export const handleChatStream = async function (req, res) {
     const { message, chatId, history } = req.body;
     const mode = req.body.mode || "dashboard";
     const requestId = req.body.requestId || "req_" + Date.now();
     const userId = req.user?.id;
-
     if (!message) {
         return res.status(400).json({ success: false, message: "Message is required" });
     }
-    
     try {
         let langchainMessages;
         let chat = null;
         let isNewChat = false;
-
         if (mode === "room") {
             langchainMessages = prepareRoomContext(history || [], message);
         } else {
@@ -27,18 +23,14 @@ export const handleChatStream = async function (req, res) {
             chat = prepared.chat;
             isNewChat = prepared.isNewChat;
         }
-
         res.setHeader("Content-Type", "text/event-stream");
         res.setHeader("Cache-Control", "no-cache");
         res.setHeader("Connection", "keep-alive");
         res.flushHeaders();
-
         if (chat) {
             res.write(`data: ${JSON.stringify({ type: "meta", requestId, chatId: chat._id.toString(), title: chat.title, isNew: isNewChat })}\n\n`);
         }
-
         let fullResponse = "";
-
         const stream = await streamWithTools(langchainMessages, {
             onToken: (text) => {
                 fullResponse += text;
@@ -54,14 +46,11 @@ export const handleChatStream = async function (req, res) {
                 res.write(`data: ${JSON.stringify({ type: "error", requestId, message, recoverable })}\n\n`);
             },
         }, null); 
-
         if (mode !== "room" && chat) {
             saveDashboardResponse(chat._id, fullResponse); 
         }
-
         res.write(`data: ${JSON.stringify({ type: "done", requestId })}\n\n`);
         res.end();
-
     } catch (error) {
         console.error("[SSE] Error:", error.message || error);
         const is429 =
@@ -70,7 +59,6 @@ export const handleChatStream = async function (req, res) {
             error.message?.toLowerCase().includes("capacity exceeded") ||
             error.message?.toLowerCase().includes("rate limit") ||
             error.message?.toLowerCase().includes("busy");
-
         if (!res.headersSent) {
             const statusCode = is429 ? 429 : 500;
             const message = is429
@@ -78,33 +66,28 @@ export const handleChatStream = async function (req, res) {
                 : (error.message || "Stream failed");
             return res.status(statusCode).json({ success: false, message });
         } else {
-            // SSE already started — send error event and close
             res.write(`data: ${JSON.stringify({ type: "error", requestId, message: error.message || "Stream interrupted", recoverable: is429 })}\n\n`);
             res.end();
         }
     }
 };
-
 export const getChats = asyncHandler(async function (req, res) {
     const userId = req.user?.id;
     const chats = await getChatHistory(userId);
     res.status(200).json(new ApiResponse(200, chats, "Chats fetched"));
 });
-
 export const getChatMsgs = asyncHandler(async function (req, res) {
     const userId = req.user?.id;
     const { chatId } = req.params;
     const messages = await getChatMessages(userId, chatId);
     res.status(200).json(new ApiResponse(200, messages, "Messages fetched"));
 });
-
 export const removeChatCtrl = asyncHandler(async function (req, res) {
     const userId = req.user?.id;
     const { chatId } = req.params;
     await deleteChat(userId, chatId);
     res.status(200).json(new ApiResponse(200, null, "Chat deleted"));
 });
-
 export const renameChatCtrl = asyncHandler(async function (req, res) {
     const userId = req.user?.id;
     const { chatId } = req.params;

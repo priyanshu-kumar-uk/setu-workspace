@@ -1,10 +1,1 @@
-import config from '../config/config.js'
-import nodemailer from 'nodemailer'
-
-export const transporter = nodemailer.createTransport({
-    service:'gmail',
-    auth:{
-        user:config.APP_EMAIL,
-        pass:config.APP_PASSWORD
-    }
-})
+import config from '../config/config.js'import nodemailer from 'nodemailer'export const transporter = nodemailer.createTransport({    service:'gmail',    auth:{        user:config.APP_EMAIL,        pass:config.APP_PASSWORD    }})

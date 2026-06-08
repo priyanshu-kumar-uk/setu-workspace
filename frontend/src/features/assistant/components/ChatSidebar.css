@@ -9,6 +9,13 @@
     flex-direction: column;
     flex-shrink: 0;
     overflow: hidden;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), border 0.3s ease;
+}
+
+.chat-sidebar.closed {
+    width: 0;
+    min-width: 0;
+    border-right: 0px solid transparent;
 }
 
 /* ─── New Chat Button ──────────────────────────────────── */

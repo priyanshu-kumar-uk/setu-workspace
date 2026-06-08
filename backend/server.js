@@ -4,6 +4,7 @@ import app from './src/app.js'
 import config from './src/config/config.js'
 import dbconnect from './src/config/database.js'
 import { initBrowserSocket } from './src/services/browser.socket.js'
+import { initRoomSocket } from './src/services/room.socket.js'
 
 dbconnect()
 
@@ -19,6 +20,7 @@ const io = new Server(httpServer, {
 })
 
 initBrowserSocket(io)
+initRoomSocket(io)
 
 httpServer.listen(config.PORT, () => {
   console.log('Server is Running  Port', config.PORT)

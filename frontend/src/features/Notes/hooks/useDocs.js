@@ -1,22 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {createDocApi, getAllDocsApi, getDocApi, updateDocApi, deleteDocApi,} from '../services/docs.api'
-
 const DOCS_KEY = ['docs']
-
-// Fetch all documents for dashboard
 export function useAllDocs() {
     return useQuery({
         queryKey: DOCS_KEY,
         queryFn: async () => {
             const res = await getAllDocsApi()
-            return res.data //api res
+            return res.data 
         },
         staleTime: 1000 * 60 * 2,
         refetchOnWindowFocus: false,
     })
 }
-
-// Fetch a single document 
 export function useDoc(id) {
     return useQuery({
         queryKey: ['docs', id],
@@ -29,8 +24,6 @@ export function useDoc(id) {
         refetchOnWindowFocus: false,
     })
 }
-
-// Create a new document
 export function useCreateDoc() {
     const queryClient = useQueryClient()
     return useMutation({
@@ -40,8 +33,6 @@ export function useCreateDoc() {
         },
     })
 }
-
-// Delete a document
 export function useDeleteDoc() {
     const queryClient = useQueryClient()
     return useMutation({
@@ -51,8 +42,6 @@ export function useDeleteDoc() {
         },
     })
 }
-
-// Update document (used internally by autosave)
 export function useUpdateDoc() {
     const queryClient = useQueryClient()
     return useMutation({

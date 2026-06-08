@@ -7,18 +7,13 @@ import {
     Heading1, Heading2, Heading3
 } from 'lucide-react'
 import './EditorToolbar.css'
-
 const EditorToolbar = ({ editor }) => {
     const [showImageToast, setShowImageToast] = useState(false)
-
     if (!editor) return null
-
     const handleImageClick = () => {
-        // Placeholder for future image upload
         setShowImageToast(true)
         setTimeout(() => setShowImageToast(false), 3000)
     }
-
     return (
         <div className="editor-toolbar">
             <div className="toolbar-group">
@@ -44,9 +39,7 @@ const EditorToolbar = ({ editor }) => {
                     <Heading3 size={16} />
                 </button>
             </div>
-
             <div className="toolbar-divider" />
-
             <div className="toolbar-group">
                 <button
                     onClick={() => editor.chain().focus().toggleBold().run()}
@@ -77,9 +70,7 @@ const EditorToolbar = ({ editor }) => {
                     <Strikethrough size={16} />
                 </button>
             </div>
-
             <div className="toolbar-divider" />
-
             <div className="toolbar-group">
                 <button
                     onClick={() => editor.chain().focus().setTextAlign('left').run()}
@@ -103,9 +94,7 @@ const EditorToolbar = ({ editor }) => {
                     <AlignRight size={16} />
                 </button>
             </div>
-
             <div className="toolbar-divider" />
-
             <div className="toolbar-group">
                 <button
                     onClick={() => editor.chain().focus().toggleBulletList().run()}
@@ -129,9 +118,7 @@ const EditorToolbar = ({ editor }) => {
                     <CheckSquare size={16} />
                 </button>
             </div>
-
             <div className="toolbar-divider" />
-
             <div className="toolbar-group">
                 <button
                     onClick={() => {
@@ -149,7 +136,6 @@ const EditorToolbar = ({ editor }) => {
                 >
                     <LinkIcon size={16} />
                 </button>
-                
                 <div className="image-btn-container">
                     <button
                         onClick={handleImageClick}
@@ -165,9 +151,7 @@ const EditorToolbar = ({ editor }) => {
                     )}
                 </div>
             </div>
-            
             <div className="toolbar-divider" />
-            
             <div className="toolbar-group">
                 <input
                     type="color"
@@ -187,5 +171,4 @@ const EditorToolbar = ({ editor }) => {
         </div>
     )
 }
-
 export default EditorToolbar

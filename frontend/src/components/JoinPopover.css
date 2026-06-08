@@ -1,0 +1,86 @@
+/* ── Join Popover ── */
+.join-popover-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.join-popover {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  animation: popoverFadeIn 0.2s ease-out;
+}
+
+@keyframes popoverFadeIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.join-input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #747775;
+  border-radius: 6px;
+  padding: 0 16px;
+  height: 48px;
+  background: #ffffff;
+  width: 340px;
+}
+
+.join-input-wrapper:focus-within {
+  border: 2px solid #0b57d0;
+  padding: 0 15px; /* offset for border width */
+}
+
+.join-kbd-icon {
+  color: #444746;
+  margin-right: 12px;
+}
+
+.join-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #1f1f1f;
+  background: transparent;
+}
+
+.join-input:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.join-input::placeholder {
+  color: #747775;
+}
+
+.join-submit-btn {
+  background: transparent;
+  border: none;
+  color: #0b57d0;
+  font-weight: 500;
+  font-size: 15px;
+  cursor: pointer;
+  padding: 8px 16px;
+  margin-left: 8px;
+  opacity: 0.5;
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+.join-submit-btn.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.join-submit-btn.active:hover {
+  background: #f4f7fe;
+}

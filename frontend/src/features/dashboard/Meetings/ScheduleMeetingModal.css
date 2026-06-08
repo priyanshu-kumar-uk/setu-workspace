@@ -1,0 +1,234 @@
+.smm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.smm-modal {
+    background: #ffffff;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.smm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    border-bottom: 1px solid #e8edf3;
+}
+
+.smm-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.smm-close-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.smm-close-btn:hover {
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+.smm-form {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.smm-form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.smm-form-row .smm-form-group {
+    flex: 1;
+}
+
+.smm-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.smm-form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.smm-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.smm-icon {
+    position: absolute;
+    left: 12px;
+    color: #94a3b8;
+}
+
+.smm-input-wrapper input,
+.smm-input-wrapper textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background: #ffffff;
+}
+
+.smm-input-wrapper .smm-icon + input,
+.smm-input-wrapper .smm-icon + textarea {
+    padding-left: 2.5rem;
+}
+
+.smm-input-wrapper input:focus,
+.smm-input-wrapper textarea:focus {
+    outline: none;
+    border-color: #0B5CFF;
+    box-shadow: 0 0 0 3px rgba(11, 92, 255, 0.1);
+}
+
+.smm-textarea-wrapper textarea {
+    resize: vertical;
+}
+
+.smm-email-wrapper {
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 0.4rem 1rem 0.4rem 2.5rem;
+    display: flex;
+    align-items: center;
+    background: #ffffff;
+    transition: border-color 0.2s ease;
+}
+
+.smm-email-wrapper:focus-within {
+    border-color: #0B5CFF;
+    box-shadow: 0 0 0 3px rgba(11, 92, 255, 0.1);
+}
+
+.smm-email-wrapper .smm-icon {
+    left: 12px;
+}
+
+.smm-chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.smm-chips-container input {
+    border: none;
+    padding: 0.35rem 0;
+    min-width: 120px;
+    flex: 1;
+    box-shadow: none !important;
+}
+
+.smm-chips-container input:focus {
+    box-shadow: none;
+}
+
+.smm-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: #e8f0fe;
+    color: #0B5CFF;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.smm-chip button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: #0B5CFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.smm-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.smm-btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.smm-btn-cancel:hover {
+    background: #e2e8f0;
+}
+
+.smm-btn-submit {
+    background: #0B5CFF;
+    color: #ffffff;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(11, 92, 255, 0.25);
+}
+
+.smm-btn-submit:hover:not(:disabled) {
+    background: #0a4dd4;
+    transform: translateY(-1px);
+}
+
+.smm-btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    box-shadow: none;
+}

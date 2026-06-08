@@ -1,9 +1,7 @@
 import React from 'react'
 import { Cloud, CloudOff, RefreshCw } from 'lucide-react'
-
 const SaveStatus = ({ status }) => {
     if (status === 'idle') return null
-
     return (
         <div style={{
             display: 'flex',
@@ -34,5 +32,4 @@ const SaveStatus = ({ status }) => {
         </div>
     )
 }
-
 export default SaveStatus

@@ -1,23 +1,29 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, Video, FileText, Bot, HelpCircle, LogOut } from 'lucide-react';
+import api, { setAccessToken } from '../../axiosInstance';
 import './Sidebar.css';
-
 const NAV_ITEMS = [
   { id: 'home',      label: 'Home',      icon: Home,     path: '/dashboard/home'      },
   { id: 'meetings',  label: 'Meetings',  icon: Video,    path: '/dashboard/meetings'  },
   { id: 'notes',     label: 'Docs',     icon: FileText, path: '/dashboard/notes'     },
   { id: 'assistant', label: 'Assistant', icon: Bot,      path: '/dashboard/assistant' },
 ];
-
 const Sidebar = () => {
   const navigate  = useNavigate();
   const { pathname } = useLocation();
-
+  const handleLogout = async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (err) {
+      console.error('Logout API error:', err);
+    }
+    setAccessToken(null);
+    navigate('/login');
+  };
   return (
     <aside className="sidebar">
       <span className="sidebar-section-label"></span>
-
       {NAV_ITEMS.map(({ id, label, icon: Icon, path }) => {
         const isActive = pathname === path || pathname.startsWith(path + '/');
         return (
@@ -34,17 +40,14 @@ const Sidebar = () => {
           </button>
         );
       })}
-
       <div className="sidebar-divider" />
-
       <div className="sidebar-spacer" />
-
       <div className="sidebar-footer">
         <button className="sidebar-footer-btn" id="sidebar-btn-help">
           <HelpCircle size={17} />
           Help &amp; Support
         </button>
-        <button className="sidebar-footer-btn" id="sidebar-btn-logout">
+        <button className="sidebar-footer-btn" id="sidebar-btn-logout" onClick={handleLogout}>
           <LogOut size={17} />
           Logout
         </button>
@@ -52,5 +55,4 @@ const Sidebar = () => {
     </aside>
   );
 };
-
 export default Sidebar;

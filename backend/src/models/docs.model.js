@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-
 const docsSchema = new mongoose.Schema(
     {
         title: {
@@ -20,6 +19,5 @@ const docsSchema = new mongoose.Schema(
     },
     { timestamps: true }
 )
-
 const docsModel = mongoose.model('docs', docsSchema)
 export default docsModel

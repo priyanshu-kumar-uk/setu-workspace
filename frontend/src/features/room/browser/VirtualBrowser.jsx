@@ -3,38 +3,24 @@ import { useBrowserSocket } from './useBrowserSocket';
 import BrowserTabStrip from './BrowserTabStrip';
 import BrowserNavBar from './BrowserNavBar';
 import BrowserCanvas from './BrowserCanvas';
+import BrowserSkeleton from '../../../components/ui/Skeletons/BrowserSkeleton';
 import './VirtualBrowser.css';
-
-const VirtualBrowser = ({ roomId, onClose }) => {
+const VirtualBrowser = ({ roomId, onClose, isFullscreen, onToggleFullscreen }) => {
   const { socket, isConnected } = useBrowserSocket(roomId);
-  
   const containerRef = useRef(null);
   const [tabs, setTabs] = useState([]);
   const [activeTabId, setActiveTabId] = useState(null);
   const [currentFrame, setCurrentFrame] = useState(null);
   const [errorToast, setErrorToast] = useState(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-
-  // Compute active URL
+  const [sessionStatus, setSessionStatus] = useState('provisioning'); 
   const activeTabUrl = tabs.find(t => t.id === activeTabId)?.url || '';
-
-  // Handle Fullscreen changes
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
   useEffect(() => {
     if (!socket) return;
-
     socket.on('browser:tabs-state', (state) => {
+      setSessionStatus('ready');
       setTabs(state.tabs || []);
       if (state.activeTabId) setActiveTabId(state.activeTabId);
     });
-
     socket.on('browser:tab-updated', (update) => {
       setTabs(prev => prev.map(tab => 
         tab.id === update.tabId 
@@ -42,19 +28,19 @@ const VirtualBrowser = ({ roomId, onClose }) => {
           : tab
       ));
     });
-
     socket.on('browser:frame', ({ buffer, tabId }) => {
-      // Only render frame if it belongs to the currently active tab
       if (tabId === activeTabId) {
         setCurrentFrame(buffer);
       }
     });
-
     socket.on('browser:error', ({ message }) => {
-      setErrorToast(message);
-      setTimeout(() => setErrorToast(null), 3000);
+      if (message === 'Failed to start browser session' || message === 'No session for room') {
+        setSessionStatus('error');
+      } else {
+        setErrorToast(message);
+        setTimeout(() => setErrorToast(null), 3000);
+      }
     });
-
     return () => {
       socket.off('browser:tabs-state');
       socket.off('browser:tab-updated');
@@ -62,94 +48,93 @@ const VirtualBrowser = ({ roomId, onClose }) => {
       socket.off('browser:error');
     };
   }, [socket, activeTabId]);
-
-  // Actions
   const handleCreateTab = useCallback(() => {
     socket?.emit('browser:create-tab');
   }, [socket]);
-
   const handleCloseTab = useCallback((tabId) => {
     socket?.emit('browser:close-tab', { tabId });
   }, [socket]);
-
   const handleSwitchTab = useCallback((tabId) => {
-    setActiveTabId(tabId); // Optimistic UI update
-    setCurrentFrame(null); // Clear old frame to avoid flicker
+    setActiveTabId(tabId); 
+    setCurrentFrame(null); 
     socket?.emit('browser:switch-tab', { tabId });
   }, [socket]);
-
   const handleNavigate = useCallback((url) => {
     if (!activeTabId) return;
     socket?.emit('browser:navigate', { tabId: activeTabId, url });
   }, [socket, activeTabId]);
-
   const handleBack = useCallback(() => {
     if (activeTabId) socket?.emit('browser:back', { tabId: activeTabId });
   }, [socket, activeTabId]);
-
   const handleForward = useCallback(() => {
     if (activeTabId) socket?.emit('browser:forward', { tabId: activeTabId });
   }, [socket, activeTabId]);
-
   const handleRefresh = useCallback(() => {
     if (activeTabId) socket?.emit('browser:refresh', { tabId: activeTabId });
   }, [socket, activeTabId]);
-
   const handleInteraction = useCallback((action) => {
     if (activeTabId) {
       socket?.emit('browser:interact', { tabId: activeTabId, action });
     }
   }, [socket, activeTabId]);
-
-
   const handleToggleFullscreen = useCallback(() => {
-    if (!document.fullscreenElement) {
-      containerRef.current?.requestFullscreen().catch(err => {
-        console.error(`Error attempting to enable fullscreen: ${err.message}`);
-      });
-    } else {
-      document.exitFullscreen().catch(err => {
-        console.error(`Error attempting to exit fullscreen: ${err.message}`);
-      });
+    if (onToggleFullscreen) {
+      onToggleFullscreen();
     }
-  }, []);
-
+  }, [onToggleFullscreen]);
+  const handleRetry = useCallback(() => {
+    setSessionStatus('provisioning');
+    if (socket) {
+      socket.disconnect();
+      socket.connect();
+    }
+  }, [socket]);
   return (
     <div ref={containerRef} className="vb-container">
-      {/* Tab Strip */}
-      <BrowserTabStrip 
-        tabs={tabs} 
-        activeTabId={activeTabId} 
-        onTabSwitch={handleSwitchTab}
-        onTabClose={handleCloseTab}
-        onTabCreate={handleCreateTab}
-      />
-
-      {/* Nav Bar */}
-      <BrowserNavBar 
-        activeTabUrl={activeTabUrl}
-        onNavigate={handleNavigate}
-        onBack={handleBack}
-        onForward={handleForward}
-        onRefresh={handleRefresh}
-        isFullscreen={isFullscreen}
-        onToggleFullscreen={handleToggleFullscreen}
-      />
-
-      {/* Viewport */}
-      {isConnected ? (
-        <BrowserCanvas 
-          frameBuffer={currentFrame} 
-          onInteraction={handleInteraction} 
-        />
-      ) : (
-        <div className="vb-loading">
-          <div className="vb-loading-spinner" />
-          <span>Connecting to Browser Session...</span>
+      {sessionStatus === 'provisioning' && (
+        <div className="vb-provisioning-overlay" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'white', backgroundColor: '#0a0a0c', flex: 1 }}>
+          <div className="spinner" style={{ marginBottom: '16px', width: '40px', height: '40px', border: '4px solid rgba(255,255,255,0.1)', borderTopColor: '#3b82f6', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+          <p>Provisioning secure browser environment...</p>
         </div>
       )}
-
-      {/* Error Toast */}
+      {sessionStatus === 'error' && (
+        <div className="vb-error-overlay" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'white', backgroundColor: '#0a0a0c', flex: 1 }}>
+          <div style={{ color: '#ef4444', marginBottom: '16px' }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          </div>
+          <p style={{ marginBottom: '24px' }}>Failed to start browser session.</p>
+          <button onClick={handleRetry} style={{ padding: '10px 20px', background: '#3b82f6', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer' }}>Retry Connection</button>
+        </div>
+      )}
+      {sessionStatus === 'ready' && (
+        <>
+          <BrowserTabStrip 
+            tabs={tabs} 
+            activeTabId={activeTabId} 
+            onTabSwitch={handleSwitchTab}
+            onTabClose={handleCloseTab}
+            onTabCreate={handleCreateTab}
+          />
+          <BrowserNavBar 
+            activeTabUrl={activeTabUrl}
+            onNavigate={handleNavigate}
+            onBack={handleBack}
+            onForward={handleForward}
+            onRefresh={handleRefresh}
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={handleToggleFullscreen}
+          />
+          {isConnected ? (
+            <BrowserCanvas 
+              frameBuffer={currentFrame} 
+              onInteraction={handleInteraction} 
+            />
+          ) : (
+            <BrowserSkeleton />
+          )}
+        </>
+      )}
+      {}
       {errorToast && (
         <div className="vb-error-toast">
           {errorToast}
@@ -158,5 +143,4 @@ const VirtualBrowser = ({ roomId, onClose }) => {
     </div>
   );
 };
-
 export default VirtualBrowser;

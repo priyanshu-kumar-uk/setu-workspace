@@ -1,29 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Video, UserPlus, Calendar, ChevronDown } from 'lucide-react';
+import JoinPopover from '../../../components/JoinPopover';
+import ScheduleMeetingModal from '../Meetings/ScheduleMeetingModal';
 import './HomePage.css';
-
-/* ── Live Clock ── */
 const LiveClock = () => {
   const [now, setNow] = useState(new Date());
-
   useEffect(() => {
     const timer = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-
   const timeStr = now.toLocaleTimeString('en-US', {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
   });
-
   const dateStr = now.toLocaleDateString('en-US', {
     weekday: 'long',
     month: 'long',
     day: 'numeric',
   });
-
   return (
     <div className="clock-block">
       <div className="clock-time">{timeStr}</div>
@@ -31,8 +27,6 @@ const LiveClock = () => {
     </div>
   );
 };
-
-/* ── Action Button ── */
 const ActionBtn = ({ id, label, icon: Icon, colorClass, hasDropdown, onClick }) => (
   <div className="action-btn-wrapper">
     <button className={`action-btn ${colorClass}`} id={id} onClick={onClick}>
@@ -46,16 +40,21 @@ const ActionBtn = ({ id, label, icon: Icon, colorClass, hasDropdown, onClick }) 
     </span>
   </div>
 );
-
-/* ── Home Page ── */
+const generateRoomId = () => {
+  const arr = new Uint8Array(10);
+  window.crypto.getRandomValues(arr);
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const s = Array.from(arr, b => chars[b % chars.length]).join('');
+  return `${s.slice(0, 3)}-${s.slice(3, 7)}-${s.slice(7, 10)}`;
+};
 const HomePage = () => {
   const navigate = useNavigate();
-
+  const [showJoinPopup, setShowJoinPopup] = useState(false);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
   return (
     <div className="home-page">
       <div className="home-center">
         <LiveClock />
-
         <div className="action-row">
           <ActionBtn
             id="qa-new-meeting"
@@ -63,25 +62,35 @@ const HomePage = () => {
             icon={Video}
             colorClass="btn-orange"
             hasDropdown
-            onClick={() => navigate('/room')}
+            onClick={() => navigate(`/room/${generateRoomId()}`)}
           />
           <ActionBtn
             id="qa-join"
             label="Join"
             icon={UserPlus}
             colorClass="btn-blue"
-            onClick={() => navigate('/room')}
+            onClick={() => setShowJoinPopup(true)}
           />
           <ActionBtn
             id="qa-schedule"
             label="Schedule"
             icon={Calendar}
             colorClass="btn-blue-dark"
+            onClick={() => setShowScheduleModal(true)}
           />
         </div>
       </div>
+      {showJoinPopup && (
+        <JoinPopover 
+          onClose={() => setShowJoinPopup(false)}
+          onJoin={(id) => navigate(`/room/${id}`)}
+        />
+      )}
+      <ScheduleMeetingModal 
+        isOpen={showScheduleModal} 
+        onClose={() => setShowScheduleModal(false)} 
+      />
     </div>
   );
 };
-
 export default HomePage;

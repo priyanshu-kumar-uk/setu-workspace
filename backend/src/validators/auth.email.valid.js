@@ -1,23 +1,1 @@
-import { body, validationResult } from 'express-validator'
-import { ApiError } from '../utils/api.error.js'
-
-export const validateRegister = (req, res, next) => {
-    const errors = validationResult(req)  
-    if(!errors.isEmpty()){
-        let errormsg =  errors.array()
-        return next (new ApiError(400,errormsg[0].msg))
-    }
-    next()
-}
-
-
-export let emailValidation = [
-    body("email")
-    .notEmpty()
-    .withMessage("Email is required")
-    .isEmail()
-    .withMessage("Invalid email format")
-    .normalizeEmail(),
-   
-validateRegister
-]
+import { body, validationResult } from 'express-validator'import { ApiError } from '../utils/api.error.js'export const validateRegister = (req, res, next) => {    const errors = validationResult(req)      if(!errors.isEmpty()){        let errormsg =  errors.array()        return next (new ApiError(400,errormsg[0].msg))    }    next()}export let emailValidation = [    body("email")    .notEmpty()    .withMessage("Email is required")    .isEmail()    .withMessage("Invalid email format")    .normalizeEmail(),validateRegister]

@@ -1,17 +1,14 @@
 import React, { useState } from "react";
 import { MessageSquare, Trash2, Pencil, Check, X, PanelLeftClose, SquarePen } from "lucide-react";
 import "./ChatSidebar.css";
-
-const ChatSidebar = ({ chats = [], activeChatId, onNewChat, onSelectChat, onDeleteChat, onRenameChat, onClose }) => {
+const ChatSidebar = ({ isOpen = true, chats = [], activeChatId, onNewChat, onSelectChat, onDeleteChat, onRenameChat, onClose }) => {
     const [editingId, setEditingId] = useState(null);
     const [editTitle, setEditTitle] = useState("");
-
     const handleStartRename = (e, chat) => {
         e.stopPropagation();
         setEditingId(chat._id);
         setEditTitle(chat.title);
     };
-
     const handleConfirmRename = (e, chatId) => {
         e.stopPropagation();
         if (editTitle.trim()) {
@@ -19,21 +16,16 @@ const ChatSidebar = ({ chats = [], activeChatId, onNewChat, onSelectChat, onDele
         }
         setEditingId(null);
     };
-
     const handleCancelRename = (e) => {
         e.stopPropagation();
         setEditingId(null);
     };
-
-    // Group chats by relative date
     const groupChats = (chatList) => {
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const yesterday = new Date(today.getTime() - 86400000);
         const weekAgo = new Date(today.getTime() - 7 * 86400000);
-
         const groups = { Today: [], Yesterday: [], "Previous 7 Days": [], Older: [] };
-
         for (const chat of chatList) {
             const d = new Date(chat.updatedAt || chat.createdAt);
             if (d >= today) groups.Today.push(chat);
@@ -41,14 +33,11 @@ const ChatSidebar = ({ chats = [], activeChatId, onNewChat, onSelectChat, onDele
             else if (d >= weekAgo) groups["Previous 7 Days"].push(chat);
             else groups.Older.push(chat);
         }
-
         return Object.entries(groups).filter(([, items]) => items.length > 0);
     };
-
     const grouped = groupChats(chats);
-
     return (
-        <aside className="chat-sidebar">
+        <aside className={`chat-sidebar ${isOpen ? 'open' : 'closed'}`}>
             <div className="chat-sidebar-header">
                 <button className="chat-sidebar-icon-btn" onClick={onClose} title="Close sidebar">
                     <PanelLeftClose size={20} />
@@ -58,7 +47,6 @@ const ChatSidebar = ({ chats = [], activeChatId, onNewChat, onSelectChat, onDele
                     <SquarePen size={20} />
                 </button>
             </div>
-
             <div className="chat-sidebar-list">
                 {grouped.map(([label, items]) => (
                     <div key={label} className="chat-sidebar-group">
@@ -72,7 +60,6 @@ const ChatSidebar = ({ chats = [], activeChatId, onNewChat, onSelectChat, onDele
                                 tabIndex={0}
                             >
                                 <MessageSquare size={15} className="chat-sidebar-item-icon" />
-
                                 {editingId === chat._id ? (
                                     <div className="chat-sidebar-edit" onClick={(e) => e.stopPropagation()}>
                                         <input
@@ -117,7 +104,6 @@ const ChatSidebar = ({ chats = [], activeChatId, onNewChat, onSelectChat, onDele
                         ))}
                     </div>
                 ))}
-
                 {chats.length === 0 && (
                     <p className="chat-sidebar-empty">No conversations yet</p>
                 )}
@@ -125,5 +111,4 @@ const ChatSidebar = ({ chats = [], activeChatId, onNewChat, onSelectChat, onDele
         </aside>
     );
 };
-
 export default ChatSidebar;

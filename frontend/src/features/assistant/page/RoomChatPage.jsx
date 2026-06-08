@@ -2,12 +2,6 @@ import React, { useEffect } from "react";
 import ChatArea from "../components/ChatArea";
 import { useChat } from "../hooks/useChat";
 import "./RoomChatPage.css";
-
-/**
- * Room AI — ephemeral/session-based chat.
- * No sidebar, no DB, no history persistence.
- * All messages destroyed on unmount / page refresh.
- */
 const RoomChatPage = () => {
     const {
         messages,
@@ -18,12 +12,9 @@ const RoomChatPage = () => {
         retryLastMessage,
         clearMessages,
     } = useChat({ mode: "room" });
-
-    // Cleanup on unmount — guarantee no data leaks
     useEffect(() => {
         return () => { clearMessages(); };
     }, [clearMessages]);
-
     return (
         <div className="room-chat-layout">
             <ChatArea
@@ -37,5 +28,4 @@ const RoomChatPage = () => {
         </div>
     );
 };
-
 export default RoomChatPage;

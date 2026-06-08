@@ -1,0 +1,165 @@
+.lobby-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--rd-bg-primary, #0f1115);
+  color: var(--rd-text-primary, #ffffff);
+  font-family: 'Inter', sans-serif;
+}
+
+.lobby-content {
+  display: flex;
+  flex-direction: row;
+  gap: 4rem;
+  align-items: center;
+  max-width: 1000px;
+  width: 100%;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .lobby-content {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+.lobby-preview-card {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.lobby-video-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 16 / 9;
+  background-color: #202124;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.lobby-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scaleX(-1); /* mirror */
+}
+
+.lobby-video.hidden {
+  display: none;
+}
+
+.lobby-video-off-state {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #9aa0a6;
+  gap: 1rem;
+}
+
+.lobby-controls {
+  position: absolute;
+  bottom: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.lobby-ctrl-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(32, 33, 36, 0.7);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.lobby-ctrl-btn:hover {
+  background: rgba(60, 64, 67, 0.9);
+}
+
+.lobby-ctrl-btn.danger {
+  background: #ea4335;
+  border-color: #ea4335;
+}
+
+.lobby-ctrl-btn.danger:hover {
+  background: #d33828;
+}
+
+.lobby-info-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.lobby-greeting {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.lobby-subtitle {
+  font-size: 1.1rem;
+  color: #9aa0a6;
+  margin-bottom: 2rem;
+}
+
+.lobby-link-box {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.lobby-link-label {
+  display: block;
+  font-size: 0.875rem;
+  color: #9aa0a6;
+  margin-bottom: 0.5rem;
+}
+
+.lobby-link-input {
+  width: 100%;
+  padding: 12px 16px;
+  background-color: #202124;
+  border: 1px solid #3c4043;
+  border-radius: 6px;
+  color: white;
+  font-size: 1rem;
+  outline: none;
+}
+
+.lobby-link-input:focus {
+  border-color: #8ab4f8;
+}
+
+.lobby-join-btn {
+  padding: 12px 32px;
+  background-color: #8ab4f8;
+  color: #202124;
+  border: none;
+  border-radius: 24px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.lobby-join-btn:hover {
+  background-color: #aecbfa;
+}

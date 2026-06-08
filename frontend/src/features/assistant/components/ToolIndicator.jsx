@@ -1,15 +1,11 @@
 import React from "react";
 import "./ToolIndicator.css";
-
 const TOOL_LABELS = {
     tavily_search: "Searching the web",
 };
-
 const ToolIndicator = ({ tool }) => {
     if (!tool) return null;
-
     const label = TOOL_LABELS[tool.name] || `Running ${tool.name}`;
-
     return (
         <div className="tool-indicator">
             <div className="tool-indicator-pulse" />
@@ -21,5 +17,4 @@ const ToolIndicator = ({ tool }) => {
         </div>
     );
 };
-
 export default ToolIndicator;

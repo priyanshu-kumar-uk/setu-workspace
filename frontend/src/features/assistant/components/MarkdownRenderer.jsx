@@ -3,17 +3,13 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "./MarkdownRenderer.css";
-
 function CodeBlock({ children, className, ...props }) {
     const match = /language-(\w+)/.exec(className || "");
     const language = match ? match[1] : "";
     const codeText = String(children).replace(/\n$/, "");
-
-    // Inline code
     if (!className && !codeText.includes("\n")) {
         return <code className="md-inline-code" {...props}>{children}</code>;
     }
-
     const handleCopy = () => {
         navigator.clipboard.writeText(codeText);
         const btn = document.activeElement;
@@ -22,7 +18,6 @@ function CodeBlock({ children, className, ...props }) {
             setTimeout(() => { btn.textContent = "Copy"; }, 2000);
         }
     };
-
     return (
         <div className="md-code-block">
             <div className="md-code-header">
@@ -35,7 +30,6 @@ function CodeBlock({ children, className, ...props }) {
         </div>
     );
 }
-
 const MarkdownRenderer = ({ content }) => {
     const components = useMemo(() => ({
         code: CodeBlock,
@@ -46,7 +40,6 @@ const MarkdownRenderer = ({ content }) => {
             <a {...props} target="_blank" rel="noopener noreferrer">{children}</a>
         ),
     }), []);
-
     return (
         <div className="md-renderer">
             <ReactMarkdown
@@ -59,5 +52,4 @@ const MarkdownRenderer = ({ content }) => {
         </div>
     );
 };
-
 export default MarkdownRenderer;

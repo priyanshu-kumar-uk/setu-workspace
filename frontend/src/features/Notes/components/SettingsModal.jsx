@@ -1,9 +1,7 @@
 import React from 'react'
 import { X, Keyboard, Command } from 'lucide-react'
-// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion'
 import './SettingsModal.css'
-
 const SHORTCUTS = [
     { category: 'Text Formatting', items: [
         { keys: ['Ctrl', 'B'], label: 'Bold' },
@@ -30,7 +28,6 @@ const SHORTCUTS = [
         { keys: ['Ctrl', 'Shift', 'P'], label: 'Export PDF' },
     ]},
 ]
-
 const SettingsModal = ({ onClose }) => {
     return (
         <AnimatePresence>
@@ -58,7 +55,6 @@ const SettingsModal = ({ onClose }) => {
                             <X size={18} />
                         </button>
                     </div>
-
                     <div className="settings-body">
                         {SHORTCUTS.map((section) => (
                             <div key={section.category} className="shortcut-section">
@@ -86,5 +82,4 @@ const SettingsModal = ({ onClose }) => {
         </AnimatePresence>
     )
 }
-
 export default SettingsModal

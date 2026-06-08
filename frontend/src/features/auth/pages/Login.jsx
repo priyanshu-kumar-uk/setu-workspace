@@ -1,117 +1,1 @@
-import React, { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom' // useNavigate add kiya
-import './Login.css'
-import { authLogin } from '../hooks/api.hooks'
-import { useForm } from 'react-hook-form'
-import { setAccessToken } from '../../axiosInstance'
-
-const Login = () => {
-  const navigate = useNavigate(); 
-  const authLoginMuataion = authLogin();
-  const { register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm();
-
-  function loginSubmit(data) {
-    authLoginMuataion.mutate(data, {
-      onSuccess: (response) => {
-        setAccessToken(response.data.accessToken);        
-        navigate("/dashboard"); 
-      },
-      onError: (error) => {
-        const isMessage = error.response?.data?.message || "Invalid credentials";
-        setError('root', {
-          type: "server",
-          message: isMessage
-        });
-      }
-    });
-  }
-
-  useEffect(() => {
-    if (errors.root) {
-      const timer = setTimeout(() => {
-        clearErrors('root');
-      }, 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [errors.root, clearErrors]);
-
-  return (
-    <div className="login-container">
-      <nav className="login-navbar">
-        <div className="navbar-content">
-          <Link to="/" className="navbar-logo">
-            <span className="setu-logo">SETU</span>
-          </Link>
-          <div className="navbar-right">
-            <span className="navbar-text">Don't have an account?</span>
-            <Link to="/register" className="navbar-signup-link">Sign Up</Link>
-          </div>
-        </div>
-      </nav>
-
-      <div className="login-main">
-        <div className="login-form-section">
-          <div className="login-form-wrapper">
-      {errors.root && (
-        <div className="floating-toaster2">
-          <div className="toaster-content2">
-            <div className="toaster-text2">
-              <p className="toaster-message2">{errors.root.message}</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-            <h1 className="login-title">Login to your account</h1>
-            
-            <form className="login-form" onSubmit={handleSubmit(loginSubmit)}>
-              <div className="form-group">
-                <label htmlFor="email" className="form-label">Email</label>
-                <input 
-                  id="email"
-                  type="email" 
-                  placeholder="your@email.com"
-                  className={`form-input ${errors.email ? 'input-error' : ''}`}
-                  {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in|org|net|co|io)$/i,
-                      message: "Enter a valid email"
-                    }
-                  })}
-                />
-                {errors.email && <p className="error-msg">{errors.email.message}</p>}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password" className="form-label">Password</label>
-                <input 
-                  id="password"
-                  type="password" 
-                  placeholder="Enter your password"
-                  className={`form-input ${errors.password ? 'input-error' : ''}`}
-                  {...register("password", { required: "Password is required" })}
-                />
-                {errors.password && <p className="error-msg">{errors.password.message}</p>}
-              </div>
-                
-              <button 
-                type="submit" 
-                className="login-button"
-                disabled={authLoginMuataion.isPending}
-              >
-                {authLoginMuataion.isPending ? "VERIFYING..." : "LOGIN"}
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <div className="login-image-section">
-          {/* SVG content... */}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-export default Login
+import React, { useEffect } from 'react'import { Link, useNavigate } from 'react-router-dom' import './Login.css'import { authLogin } from '../hooks/api.hooks'import { useForm } from 'react-hook-form'import { setAccessToken } from '../../axiosInstance'const Login = () => {  const navigate = useNavigate();   const authLoginMuataion = authLogin();  const { register, handleSubmit, formState: { errors }, setError, clearErrors } = useForm();  function loginSubmit(data) {    authLoginMuataion.mutate(data, {      onSuccess: (response) => {        setAccessToken(response.data.accessToken);                navigate("/dashboard");       },      onError: (error) => {        const isMessage = error.response?.data?.message || "Invalid credentials";        setError('root', {          type: "server",          message: isMessage        });      }    });  }  useEffect(() => {    if (errors.root) {      const timer = setTimeout(() => {        clearErrors('root');      }, 4000);      return () => clearTimeout(timer);    }  }, [errors.root, clearErrors]);  return (    <div className="login-container">      <nav className="login-navbar">        <div className="navbar-content">          <Link to="/" className="navbar-logo">            <span className="setu-logo">SETU</span>          </Link>          <div className="navbar-right">            <span className="navbar-text">Don't have an account?</span>            <Link to="/register" className="navbar-signup-link">Sign Up</Link>          </div>        </div>      </nav>      <div className="login-main">        <div className="login-form-section">          <div className="login-form-wrapper">      {errors.root && (        <div className="floating-toaster2">          <div className="toaster-content2">            <div className="toaster-text2">              <p className="toaster-message2">{errors.root.message}</p>            </div>          </div>        </div>      )}            <h1 className="login-title">Login to your account</h1>            <form className="login-form" onSubmit={handleSubmit(loginSubmit)}>              <div className="form-group">                <label htmlFor="email" className="form-label">Email</label>                <input                   id="email"                  type="email"                   placeholder="your@email.com"                  className={`form-input ${errors.email ? 'input-error' : ''}`}                  {...register("email", {                    required: "Email is required",                    pattern: {                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|in|org|net|co|io)$/i,                      message: "Enter a valid email"                    }                  })}                />                {errors.email && <p className="error-msg">{errors.email.message}</p>}              </div>              <div className="form-group">                <label htmlFor="password" className="form-label">Password</label>                <input                   id="password"                  type="password"                   placeholder="Enter your password"                  className={`form-input ${errors.password ? 'input-error' : ''}`}                  {...register("password", { required: "Password is required" })}                />                {errors.password && <p className="error-msg">{errors.password.message}</p>}              </div>              <button                 type="submit"                 className="login-button"                disabled={authLoginMuataion.isPending}              >                {authLoginMuataion.isPending ? "VERIFYING..." : "LOGIN"}              </button>            </form>          </div>        </div>        <div className="login-image-section">          <div className="login-image-overlay">            <img               src="/login%20right.png"               alt="SETU Dashboard Preview"               className="login-hero-image"            />            <div className="login-image-caption">              <h2 className="caption-title">Collaborate Seamlessly</h2>              <p className="caption-text">Host meetings, share documents, and work together — all in one place.</p>            </div>          </div>        </div>      </div>    </div>  )}export default Login

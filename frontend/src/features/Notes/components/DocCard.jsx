@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { FileText, Trash2, AlertTriangle } from 'lucide-react'
-// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion'
 import './DocCard.css'
-
 function formatDate(dateStr) {
     const d = new Date(dateStr)
     const now = new Date()
@@ -11,7 +9,6 @@ function formatDate(dateStr) {
     const diffMins = Math.floor(diffMs / 60000)
     const diffHours = Math.floor(diffMs / 3600000)
     const diffDays = Math.floor(diffMs / 86400000)
-
     if (diffMins < 1) return 'Just now'
     if (diffMins < 60) return `${diffMins}m ago`
     if (diffHours < 24) return `${diffHours}h ago`
@@ -19,26 +16,21 @@ function formatDate(dateStr) {
     if (diffDays < 7) return `${diffDays} days ago`
     return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
-
 const DocCard = ({ doc, onOpen, onDelete }) => {
     const [showConfirm, setShowConfirm] = useState(false)
-
     const handleDeleteClick = (e) => {
         e.stopPropagation()
         setShowConfirm(true)
     }
-
     const confirmDelete = (e) => {
         e.stopPropagation()
         onDelete(doc._id)
         setShowConfirm(false)
     }
-
     const cancelDelete = (e) => {
         e.stopPropagation()
         setShowConfirm(false)
     }
-
     return (
         <>
         <motion.div
@@ -75,7 +67,6 @@ const DocCard = ({ doc, onOpen, onDelete }) => {
                 <Trash2 size={15} />
             </button>
         </motion.div>
-
         <AnimatePresence>
             {showConfirm && (
                 <div className="doc-card-confirm-overlay" onClick={cancelDelete}>
@@ -102,5 +93,4 @@ const DocCard = ({ doc, onOpen, onDelete }) => {
         </>
     )
 }
-
 export default DocCard

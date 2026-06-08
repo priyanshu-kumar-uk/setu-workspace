@@ -30,3 +30,9 @@
     color: #0B5CFF;
     transform: translateY(-1px);
 }
+
+.sidebar-open-btn.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-20px);
+}
