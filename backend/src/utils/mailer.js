@@ -4,6 +4,7 @@ import nodemailer from 'nodemailer';
 export const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 465, 
+    secure: true, // IMPORTANT: Must be true for port 465
     auth: {
         user: config.APP_EMAIL,
         pass: config.APP_PASSWORD
@@ -12,4 +13,4 @@ export const transporter = nodemailer.createTransport({
         rejectUnauthorized: false
     },
     connectionTimeout: 10000 
-});   
+});
