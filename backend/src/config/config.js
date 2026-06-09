@@ -14,6 +14,7 @@ import dotenv from 'dotenv'
     TOKEN : process.env.TOKEN,
     MISTRAL_API_KEY : process.env.MISTRAL_API_KEY,
     TAVILY_API_KEY : process.env.TAVILY_API_KEY,
-    FRONTEND_URL : process.env.FRONTEND_URL
+    FRONTEND_URL : process.env.FRONTEND_URL,
+    BREVO_API_KEY : process.env.BREVO_API_KEY
 }
 export default config
