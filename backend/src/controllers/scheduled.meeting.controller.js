@@ -20,6 +20,10 @@ export const createScheduledMeeting = asyncHandler(async function (req, res) {
     const roomId = generateMeetingId();
     const parsedScheduledTime = new Date(scheduledTime);
     const expireAt = new Date(parsedScheduledTime.getTime() + Number(durationInMinutes) * 60000);
+    
+    if (expireAt <= new Date()) {
+        return res.status(400).json(new ApiResponse(400, null, "Meeting time has already passed. Please select a future time."));
+    }
     const newMeeting = await ScheduledMeeting.create({
         title,
         hostId: userId,

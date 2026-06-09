@@ -9,6 +9,7 @@ const ScheduleMeetingModal = ({ isOpen, onClose }) => {
     const [durationInMinutes, setDurationInMinutes] = useState(30);
     const [emailInput, setEmailInput] = useState('');
     const [invitedEmails, setInvitedEmails] = useState([]);
+    const [errorMsg, setErrorMsg] = useState('');
     const scheduleMutation = useScheduleMeeting();
     if (!isOpen) return null;
     const handleAddEmail = (e) => {
@@ -26,6 +27,7 @@ const ScheduleMeetingModal = ({ isOpen, onClose }) => {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrorMsg('');
         const scheduledTime = new Date(`${date}T${time}`);
         try {
             await scheduleMutation.mutateAsync({
@@ -37,6 +39,7 @@ const ScheduleMeetingModal = ({ isOpen, onClose }) => {
             onClose(); 
         } catch (error) {
             console.error('Failed to schedule meeting:', error);
+            setErrorMsg(error.response?.data?.message || 'Failed to schedule meeting. Please check the date and time.');
         }
     };
     return (
@@ -46,6 +49,7 @@ const ScheduleMeetingModal = ({ isOpen, onClose }) => {
                     <h2>Schedule Meeting</h2>
                     <button className="smm-close-btn" onClick={onClose}><X size={20} /></button>
                 </div>
+                {errorMsg && <div className="smm-error-msg" style={{ color: 'red', margin: '10px 20px', fontSize: '0.9rem', padding: '8px', background: '#ffebee', borderRadius: '4px' }}>{errorMsg}</div>}
                 <form className="smm-form" onSubmit={handleSubmit}>
                     <div className="smm-form-group">
                         <label>Title</label>
