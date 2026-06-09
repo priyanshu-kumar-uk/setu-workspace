@@ -131,7 +131,12 @@ export async function getOrCreateSession(roomId, io, startUrl) {
     args: [
       '--disable-blink-features=AutomationControlled',
       '--disable-infobars',
-      '--no-sandbox'
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--no-zygote',
+      '--single-process'
     ]
   });
   const context = await browser.newContext({ 
