@@ -1,1 +1,32 @@
-import {getMeApi, loginApi, otpSendApi,otpVerifyApi, profileRegisterApi} from '../services/auth.api.js'import {useMutation, useQuery} from '@tanstack/react-query'export  function authOtpSend(){   return useMutation({        mutationFn: ({email})=> otpSendApi({email}),    })}export function authOtpVerify(){   return useMutation({      mutationFn:({otp,email})=> otpVerifyApi({otp,email}),      onSuccess:(data)=> console.log(data)   })}export function authRegister(){   return useMutation({      mutationFn:({ firstname, lastname, password, registrationToken })=> profileRegisterApi({ firstname, lastname, password, registrationToken }),      onSuccess:(data)=> console.log(data)   })}export function authLogin(){   return useMutation({      mutationFn:({email,password})=>loginApi({email,password}),      onSuccess:(data)=> console.log(data)   })}export function authGetme(){   return useQuery({      queryKey:["user"],      queryFn:getMeApi,      staleTime:1000*60*30,      gcTime:1000*60*60,      refetchOnWindowFocus:false,      retry:false   })}
+import {getMeApi, loginApi, otpSendApi,otpVerifyApi, profileRegisterApi} from '../services/auth.api.js'
+import {useMutation, useQuery} from '@tanstack/react-query'
+export  function authOtpSend(){
+   return useMutation({  
+      mutationFn: ({email})=> otpSendApi({email}),
+    })
+}
+export function authOtpVerify(){
+   return useMutation({
+      mutationFn:({otp,email})=> otpVerifyApi({otp,email})
+   })
+}
+export function authRegister(){
+   return useMutation({
+      mutationFn:({ firstname, lastname, password, registrationToken })=> profileRegisterApi({ firstname, lastname, password, registrationToken })
+   })
+}
+export function authLogin(){
+   return useMutation({
+      mutationFn:({email,password})=>loginApi({email,password})
+   })
+}
+export function authGetme(){
+   return useQuery({
+      queryKey:["user"],
+      queryFn:getMeApi,
+      staleTime:1000*60*30,
+      gcTime:1000*60*60,
+      refetchOnWindowFocus:false,
+      retry:false
+   })
+}

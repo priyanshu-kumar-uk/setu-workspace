@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { io as ioClient } from 'socket.io-client';
+import { getSocketUrl } from '../../../config.js';
 export function useBrowserSocket(roomId) {
   const socketRef = useRef(null);
   const [isConnected, setIsConnected] = useState(false);
   useEffect(() => {
     if (!roomId) return;
-    const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : '';
+    const baseUrl = getSocketUrl();
     const socket = ioClient(`${baseUrl}/browser`, {
       query: { roomId, start_url: 'https://www.google.com' },
       transports: ['websocket', 'polling'],

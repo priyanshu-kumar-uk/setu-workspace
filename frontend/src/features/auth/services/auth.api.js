@@ -1,6 +1,8 @@
 import axios from 'axios'
 import api from '../../axiosInstance'
-const baseURL = import.meta.env.VITE_API_URL || "/api";
+import { getApiUrl } from '../../../config.js';
+
+const baseURL = getApiUrl();
 
 export async function otpSendApi({ email }) {
     try {

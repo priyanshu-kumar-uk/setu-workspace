@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getSocketUrl } from '../../config';
 import { AnimatePresence, motion } from 'framer-motion';
 import { io as ioClient } from 'socket.io-client';
 import {
@@ -533,7 +534,7 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
         stream.getVideoTracks().forEach(t => { t.enabled = initialVideoOn; });
       }
       // ── 2. CREATE SOCKET (not connected yet) ────────────────────────────
-      const socketUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : '/';
+      const socketUrl = getSocketUrl();
       const socket = ioClient(socketUrl, { autoConnect: false });
       socketRef.current = socket;
       // ── 3. REGISTER ALL HANDLERS BEFORE CONNECTING ──────────────────────

@@ -37,8 +37,11 @@ const VirtualBrowser = ({ roomId, onClose, isFullscreen, onToggleFullscreen }) =
       if (message === 'Failed to start browser session' || message === 'No session for room') {
         setSessionStatus('error');
       } else {
-        setErrorToast(message);
-        setTimeout(() => setErrorToast(null), 3000);
+        const cleanMessage = message?.includes('Timeout') 
+          ? 'Website took too long to load. Please try again.' 
+          : 'Browser encountered an issue. Please try again.';
+        setErrorToast(cleanMessage);
+        setTimeout(() => setErrorToast(null), 4000);
       }
     });
     return () => {

@@ -193,9 +193,25 @@ const LandingPage = () => {
     });
     return () => observers.forEach((obs) => obs.disconnect());
   }, []);
+  const handleDeveloperSettings = () => {
+    const currentUrl = localStorage.getItem('CUSTOM_API_URL') || '';
+    const newUrl = prompt('Enter Ngrok URL (e.g., https://xyz.ngrok-free.app). Leave blank for default Render backend:', currentUrl);
+    
+    if (newUrl !== null) {
+      if (newUrl.trim() === '') {
+        localStorage.removeItem('CUSTOM_API_URL');
+        alert('Switched back to default Render backend!');
+      } else {
+        localStorage.setItem('CUSTOM_API_URL', newUrl.trim());
+        alert('Switched to Custom Backend!');
+      }
+      window.location.reload();
+    }
+  };
+
   return (
-    <div className="landing-page-container">
-      {}
+    <div className="landing-container">
+      {/* ── Navbar ───────────────────────────────────────────────────────── */}
       <nav className="navbar">
         <div className="nav-logo" onClick={() => navigate("/")}>
           SETU
@@ -372,6 +388,13 @@ const LandingPage = () => {
       {}
       {}
       {}
+      <div 
+        style={{ position: 'fixed', bottom: '10px', right: '10px', width: '10px', height: '10px', cursor: 'pointer', zIndex: 9999 }} 
+        onClick={handleDeveloperSettings}
+        title="Developer Settings"
+      >
+        <span style={{ color: 'rgba(255,255,255,0.1)' }}>.</span>
+      </div>
     </div>
   );
 };

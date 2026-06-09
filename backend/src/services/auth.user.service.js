@@ -118,7 +118,7 @@ export const sendOtpService = async (email) => {
     try {
         await transporter.sendMail(mailoptions)
     } catch (err) {
-        throw new ApiError(401, `OTP sending fail ,  ${err}`)
+        throw new ApiError(401, "Failed to send OTP. Please check your email or try again later.")
     }
     return { user, otpExpires }
 }

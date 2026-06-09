@@ -43,10 +43,6 @@ const Sidebar = () => {
       <div className="sidebar-divider" />
       <div className="sidebar-spacer" />
       <div className="sidebar-footer">
-        <button className="sidebar-footer-btn" id="sidebar-btn-help">
-          <HelpCircle size={17} />
-          Help &amp; Support
-        </button>
         <button className="sidebar-footer-btn" id="sidebar-btn-logout" onClick={handleLogout}>
           <LogOut size={17} />
           Logout

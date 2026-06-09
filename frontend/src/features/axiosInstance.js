@@ -8,7 +8,9 @@ export const setAccessToken = (token) => {
 
 export const getAccessToken = () => accessToken;
 
-const baseURL = import.meta.env.VITE_API_URL || "/api";
+import { getApiUrl } from '../config.js';
+
+const baseURL = getApiUrl();
 
 const api = axios.create({
     baseURL,
