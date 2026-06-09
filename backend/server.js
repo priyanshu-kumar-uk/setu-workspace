@@ -12,11 +12,25 @@ const httpServer = createServer(app)
 
 const io = new Server(httpServer, {
   cors: {
-    origin: config.FRONTEND_URL || 'http://localhost:5173',
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      
+      const allowedOrigins = [
+        config.FRONTEND_URL, 
+        'http://localhost:5173',
+        'http://localhost:3000'
+      ];
+
+      if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
     methods: ['GET', 'POST'],
   },
-  maxHttpBufferSize: 5e6, // 5MB — enough for JPEG screenshot frames
+  maxHttpBufferSize: 5e6, 
 })
 
 initBrowserSocket(io)

@@ -9,10 +9,26 @@ import docsRouter from './routers/docs.route.js'
 import meetingRouter from './routers/meeting.log.route.js'
 import scheduledMeetingRouter from './routers/scheduled.meeting.route.js'
 import { startNotificationCron } from './services/notification.service.js'
+import config from './config/config.js'
 const app = express()
 startNotificationCron(); 
+app.set("trust proxy", 1); 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      config.FRONTEND_URL, 
+      "http://localhost:5173",
+      "http://localhost:3000"
+    ];
+
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
