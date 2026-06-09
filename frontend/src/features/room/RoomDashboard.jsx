@@ -210,6 +210,10 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
   const [linkCopied, setLinkCopied] = useState(false);
   const [isMyHandRaised, setIsMyHandRaised] = useState(false);
   const [isMeSpeaking, setIsMeSpeaking] = useState(false);
+  const [incomingChatToast, setIncomingChatToast] = useState(null);
+  const chatToastTimerRef = useRef(null);
+  const activePanelRef = useRef(activePanel);
+  useEffect(() => { activePanelRef.current = activePanel; }, [activePanel]);
   const { stopLoading } = useLoading();
   // Premium loader minimum duration (let them read the rotating messages)
   useEffect(() => {
@@ -588,6 +592,11 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
       socket.on('chat:receive', (message) => {
         if (cancelled) return;
         setChatMessages(prev => [...prev, message]);
+        if (activePanelRef.current !== 'chat' && message.senderName !== myDisplayNameRef.current) {
+           setIncomingChatToast(message);
+           if (chatToastTimerRef.current) clearTimeout(chatToastTimerRef.current);
+           chatToastTimerRef.current = setTimeout(() => setIncomingChatToast(null), 3000);
+        }
       });
       // ── Media Toggle Indicator ─────────────────────────────────────────
       socket.on('user-toggled-media', ({ socketId: incomingSocketId, audio, video }) => {
@@ -1031,6 +1040,78 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
   return (
     <div className="rd-container" id="rd-container-root">
       {isOffline && <OfflineOverlay />}
+
+      {/* Global Toast Notification for Copy Link */}
+      <AnimatePresence>
+        {linkCopied && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, x: '-50%' }}
+            animate={{ opacity: 1, y: 20, x: '-50%' }}
+            exit={{ opacity: 0, y: -20, x: '-50%' }}
+            style={{
+              position: 'fixed',
+              top: '0',
+              left: '50%',
+              zIndex: 9999,
+              background: '#22c55e',
+              color: 'white',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontWeight: '500',
+              fontSize: '14px'
+            }}
+          >
+            <Check size={18} />
+            Meeting Link Copied!
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Global Toast Notification for Incoming Chat */}
+      <AnimatePresence>
+        {incomingChatToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, x: 0 }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            exit={{ opacity: 0, y: 20, x: 0 }}
+            style={{
+              position: 'fixed',
+              bottom: '80px',
+              right: '24px',
+              zIndex: 9998,
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              color: '#0f172a',
+              padding: '12px 16px',
+              borderRadius: '8px',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              minWidth: '240px',
+              maxWidth: '320px',
+              cursor: 'pointer'
+            }}
+            onClick={() => {
+               setIncomingChatToast(null);
+               setActivePanel('chat');
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#0B5CFF', fontWeight: '600' }}>
+               <MessageSquare size={14} />
+               {incomingChatToast.senderName}
+            </div>
+            <div style={{ fontSize: '13px', color: '#475569', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+               {incomingChatToast.text}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <RoomDocsOverlay roomId={roomId} onClose={() => setShowDocsOverlay(false)} isVisible={showDocsOverlay} />
       <div className="rd-content-wrapper">
         <div className={`rd-workspace ${activePanel !== 'none' ? 'rd-workspace-shrunk' : ''} ${isBrowserFullscreen ? 'is-browser-fullscreen' : ''}`}>

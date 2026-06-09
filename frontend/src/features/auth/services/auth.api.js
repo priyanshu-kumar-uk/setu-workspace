@@ -1,34 +1,38 @@
 import axios from 'axios'
 import api from '../../axiosInstance'
+const baseURL = import.meta.env.VITE_API_URL || "/api";
+
 export async function otpSendApi({ email }) {
     try {
-        let res = await api.post('/auth/otpsend', { email })
-        return res.data
+        let res = await axios.post(`${baseURL}/auth/otpsend`, { email });
+        return res.data;
     } catch (err) {
-        throw err
+        throw err;
     }
 }
 
 export async function otpVerifyApi({ otp, email }) {
     try {
-        let res = await api.post('/auth/otpVerify', { otp, email })
-        return res.data
+        let res = await axios.post(`${baseURL}/auth/otpVerify`, { otp, email });
+        return res.data;
     } catch (err) {
-        throw err
+        throw err;
     }
 }
 
 export async function profileRegisterApi({ firstname, lastname, password, registrationToken }) {
     try {
-        let res = await api.post('/auth/register', {
+        let res = await axios.post(`${baseURL}/auth/register`, {
             firstname,
             lastname,
             password,
             registrationToken
-        }) 
-        return res.data
+        }, {
+            withCredentials: true 
+        }); 
+        return res.data;
     } catch (err) {
-        throw err
+        throw err;
     }
 }
 export async function loginApi({ email, password }) {

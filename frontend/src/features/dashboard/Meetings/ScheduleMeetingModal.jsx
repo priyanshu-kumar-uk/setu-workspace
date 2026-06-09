@@ -98,7 +98,7 @@ const ScheduleMeetingModal = ({ isOpen, onClose }) => {
                         </div>
                     </div>
                     <div className="smm-form-group">
-                        <label>Invited Emails (Press Enter to add)</label>
+                        <label>Invited Emails (Optional, Press Enter to add)</label>
                         <div className="smm-input-wrapper smm-email-wrapper">
                             <Users size={18} className="smm-icon" />
                             <div className="smm-chips-container">

@@ -118,3 +118,56 @@
   background-color: #f1f5f9;
   color: #475569;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Mobile Responsiveness (Bottom Navigation Bar)
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100vw;
+    min-width: 100vw;
+    height: 70px;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    border-right: none;
+    border-top: 1px solid #e8edf3;
+    padding: 0;
+    overflow: hidden;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+  }
+
+  .sidebar-section-label,
+  .sidebar-divider,
+  .sidebar-spacer,
+  .sidebar-footer {
+    display: none; /* Hide non-essential items on bottom nav */
+  }
+
+  .sidebar-nav-btn {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    padding: 8px 12px;
+    gap: 4px;
+    font-size: 0.65rem;
+    text-align: center;
+  }
+
+  .sidebar-nav-icon {
+    margin-bottom: 2px;
+  }
+
+  .sidebar-active-indicator {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+  }
+}

@@ -1,10 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { updateDocApi } from '../services/docs.api'
+
 export function useAutosave(docId, delay = 1500) {
+    const queryClient = useQueryClient()
     const [status, setStatus] = useState('idle') 
     const timerRef = useRef(null)
     const pendingRef = useRef(null)
     const lastSavedRef = useRef(null)
+    
     const flush = useCallback(async () => {
         if (!pendingRef.current || !docId) return
         const payloadString = JSON.stringify(pendingRef.current)
@@ -13,17 +17,20 @@ export function useAutosave(docId, delay = 1500) {
             setStatus('saved')
             return
         }
-        const payload = pendingRef.current
+        const payload = { ...pendingRef.current }
         pendingRef.current = null
         setStatus('saving')
         try {
             await updateDocApi(docId, payload)
             lastSavedRef.current = JSON.stringify(payload)
             setStatus('saved')
+            
+            queryClient.setQueryData(['docs', docId], (old) => old ? { ...old, ...payload } : old)
+            queryClient.setQueryData(['docs'], (old) => old ? old.map(d => d._id === docId ? { ...d, ...payload } : d) : old)
         } catch {
             setStatus('error')
         }
-    }, [docId])
+    }, [docId, queryClient])
     const triggerSave = useCallback(
         (payload) => {
             pendingRef.current = { ...pendingRef.current, ...payload }

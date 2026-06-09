@@ -1,7 +1,7 @@
 import api from "../../axiosInstance";
 export async function streamChat({ message, chatId, mode, history, requestId, signal, onEvent }) {
-    const baseUrl = import.meta.env.VITE_API_URL || '';
-    const response = await fetch(`${baseUrl}/api/chat/stream`, {
+    const baseUrl = import.meta.env.VITE_API_URL || '/api';
+    const response = await fetch(`${baseUrl}/chat/stream`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

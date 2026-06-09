@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import { motion, useDragControls, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -33,9 +33,26 @@ const DEFAULT_W = 900;
 const DEFAULT_H = 580;
 const MIN_W = 560;
 const MIN_H = 360;
+
+const extensions = [
+  StarterKit.configure({
+    heading: { levels: [1, 2, 3] },
+  }),
+  Underline,
+  TextAlign.configure({ types: ["heading", "paragraph"] }),
+  Link.configure({ openOnClick: false }),
+  Image,
+  Placeholder.configure({ placeholder: "Start writing…" }),
+  TaskList,
+  TaskItem.configure({ nested: true }),
+  TextStyle,
+  Color,
+  Highlight,
+];
+
 const RoomDocsOverlay = ({ roomId, onClose, isVisible }) => {
-  const dragControls = useDragControls();
   const [size, setSize] = useState({ width: DEFAULT_W, height: DEFAULT_H });
+  const [isResizing, setIsResizing] = useState(false);
   const resizeStartRef = useRef(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -71,21 +88,7 @@ const RoomDocsOverlay = ({ roomId, onClose, isVisible }) => {
   const canSaveRef = useRef(false);
   const editorRef = useRef(null);
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Underline,
-      Strike,
-      TextAlign.configure({ types: ["heading", "paragraph"] }),
-      Link.configure({ openOnClick: false }),
-      Image,
-      Placeholder.configure({ placeholder: "Start writing…" }),
-      TaskList,
-      TaskItem.configure({ nested: true }),
-      TextStyle,
-      Color,
-      Highlight,
-      Heading.configure({ levels: [1, 2, 3] }),
-    ],
+    extensions,
     content: null,
     onUpdate: ({ editor: ed }) => {
       if (canSaveRef.current)
@@ -128,6 +131,8 @@ const RoomDocsOverlay = ({ roomId, onClose, isVisible }) => {
     (e) => {
       e.preventDefault();
       e.stopPropagation();
+      e.nativeEvent.stopPropagation();
+      setIsResizing(true);
       resizeStartRef.current = {
         startX: e.clientX,
         startY: e.clientY,
@@ -144,6 +149,39 @@ const RoomDocsOverlay = ({ roomId, onClose, isVisible }) => {
       };
       const onUp = () => {
         resizeStartRef.current = null;
+        setIsResizing(false);
+        window.removeEventListener("pointermove", onMove);
+        window.removeEventListener("pointerup", onUp);
+      };
+      window.addEventListener("pointermove", onMove);
+      window.addEventListener("pointerup", onUp);
+    },
+    [size],
+  );
+  
+  const handleResizeStartTR = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.nativeEvent.stopPropagation();
+      setIsResizing(true);
+      resizeStartRef.current = {
+        startX: e.clientX,
+        startY: e.clientY,
+        startW: size.width,
+        startH: size.height,
+      };
+      const onMove = (ev) => {
+        if (!resizeStartRef.current) return;
+        const { startX, startY, startW, startH } = resizeStartRef.current;
+        setSize({
+          width: Math.max(MIN_W, startW + ev.clientX - startX),
+          height: Math.max(MIN_H, startH - (ev.clientY - startY)),
+        });
+      };
+      const onUp = () => {
+        resizeStartRef.current = null;
+        setIsResizing(false);
         window.removeEventListener("pointermove", onMove);
         window.removeEventListener("pointerup", onUp);
       };
@@ -160,9 +198,7 @@ const RoomDocsOverlay = ({ roomId, onClose, isVisible }) => {
         height: isMinimized ? 44 : size.height,
         pointerEvents: isVisible ? "auto" : "none"
       }}
-      drag
-      dragControls={dragControls}
-      dragListener={false}
+      drag={!isResizing}
       dragMomentum={false}
       dragElastic={0}
       initial={{ opacity: 0, scale: 0.97, y: -12 }}
@@ -176,7 +212,6 @@ const RoomDocsOverlay = ({ roomId, onClose, isVisible }) => {
       {}
       <div
         className="rd-docs-titlebar"
-        onPointerDown={(e) => dragControls.start(e)}
       >
         <div className="rd-docs-titlebar-left">
           <span className="rd-docs-titlebar-icon">
@@ -320,6 +355,10 @@ const RoomDocsOverlay = ({ roomId, onClose, isVisible }) => {
             <div
               className="rd-docs-resize-handle"
               onPointerDown={handleResizeStart}
+            />
+            <div
+              className="rd-docs-resize-handle-tr"
+              onPointerDown={handleResizeStartTR}
             />
           </motion.div>
         )}

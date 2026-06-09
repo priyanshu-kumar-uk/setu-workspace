@@ -298,3 +298,32 @@
   font-size: 1rem;
   font-weight: 500;
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Mobile Responsiveness
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .meetings-page {
+    padding: 1rem;
+    padding-bottom: 80px; /* Space for bottom nav */
+  }
+
+  .mh-analytics-row {
+    flex-direction: column;
+  }
+
+  .mh-history-table-container {
+    overflow-x: auto; /* Allow horizontal scroll for table */
+  }
+
+  .meetings-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .meetings-header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+

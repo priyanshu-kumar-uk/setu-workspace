@@ -23,6 +23,22 @@ import BubbleMenuBar from '../components/BubbleMenuBar'
 import DocsSidebar from '../components/DocsSidebar'
 import SettingsModal from '../components/SettingsModal'
 import './DocsEditorPage.css'
+const extensions = [
+    StarterKit.configure({
+        heading: { levels: [1, 2, 3] },
+    }),
+    Underline,
+    TextAlign.configure({ types: ['heading', 'paragraph'] }),
+    Link.configure({ openOnClick: false }),
+    Image,
+    Placeholder.configure({ placeholder: 'Type / for commands, or start writing...' }),
+    TaskList,
+    TaskItem.configure({ nested: true }),
+    TextStyle,
+    Color,
+    Highlight,
+];
+
 const DocsEditorPage = () => {
     const { id } = useParams()
     const navigate = useNavigate()
@@ -35,21 +51,7 @@ const DocsEditorPage = () => {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
     const [isSettingsOpen, setIsSettingsOpen] = useState(false)
     const editor = useEditor({
-        extensions: [
-            StarterKit,
-            Underline,
-            Strike,
-            TextAlign.configure({ types: ['heading', 'paragraph'] }),
-            Link.configure({ openOnClick: false }),
-            Image,
-            Placeholder.configure({ placeholder: 'Type / for commands, or start writing...' }),
-            TaskList,
-            TaskItem.configure({ nested: true }),
-            TextStyle,
-            Color,
-            Highlight,
-            Heading.configure({ levels: [1, 2, 3] }),
-        ],
+        extensions,
         content: null,
         onUpdate: ({ editor }) => {
             if (isHydrated) {

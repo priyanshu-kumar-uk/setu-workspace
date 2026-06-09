@@ -305,3 +305,18 @@
   opacity: 0.5; transition: opacity 0.15s;
 }
 .rd-docs-resize-handle:hover { opacity: 1; }
+
+/* ── NE resize handle (Top-Right) ─────────────────────────────────── */
+.rd-docs-resize-handle-tr {
+  position: absolute; top: 0; right: 0;
+  width: 18px; height: 18px;
+  cursor: ne-resize; z-index: 10;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent, transparent 2px,
+    #cbd5e1 2px, #cbd5e1 3px
+  );
+  border-radius: 0 10px 0 0;
+  opacity: 0.5; transition: opacity 0.15s;
+}
+.rd-docs-resize-handle-tr:hover { opacity: 1; }

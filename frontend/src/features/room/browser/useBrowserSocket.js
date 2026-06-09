@@ -5,7 +5,8 @@ export function useBrowserSocket(roomId) {
   const [isConnected, setIsConnected] = useState(false);
   useEffect(() => {
     if (!roomId) return;
-    const socket = ioClient('/browser', {
+    const baseUrl = import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace('/api', '') : '';
+    const socket = ioClient(`${baseUrl}/browser`, {
       query: { roomId, start_url: 'https://www.google.com' },
       transports: ['websocket', 'polling'],
       reconnection: true,

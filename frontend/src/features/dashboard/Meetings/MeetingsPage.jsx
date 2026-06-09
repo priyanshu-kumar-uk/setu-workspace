@@ -51,6 +51,9 @@ const MeetingsPage = () => {
       await deleteMutation.mutateAsync(id);
     } catch (err) {
       console.error("Failed to delete history record", err);
+      if (historyData?.data) {
+        setLocalHistoryLogs(Array.isArray(historyData.data) ? historyData.data : historyData.data.logs || []);
+      }
     }
   };
   return (

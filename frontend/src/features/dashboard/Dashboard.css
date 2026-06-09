@@ -51,3 +51,19 @@
 .floating-assistant-btn:active {
   transform: translateY(0) scale(0.95);
 }
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   Mobile Responsiveness
+   ───────────────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .dashboard-body {
+    flex-direction: column; /* Stack vertically: main content on top, sidebar at bottom */
+  }
+
+  .floating-assistant-btn {
+    bottom: calc(70px + 1rem); /* Above the bottom navigation */
+    right: 1rem;
+    width: 50px;
+    height: 50px;
+  }
+}

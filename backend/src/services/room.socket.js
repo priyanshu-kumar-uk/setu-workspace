@@ -259,7 +259,7 @@ export const initRoomSocket = (io) => {
           socket.to(roomId).emit('webrtc:user-left', { socketId: socket.id });
           try {
             await MeetingLog.updateMany(
-              { roomId, "participants.socketId": socket.id, endTime: null },
+              { roomId, "participants.socketId": socket.id },
               { $set: { "participants.$.leftAt": checkoutTime } }
             );
             const log = await MeetingLog.findOne({ 
