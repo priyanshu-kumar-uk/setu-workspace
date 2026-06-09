@@ -389,11 +389,11 @@ const LandingPage = () => {
       {}
       {}
       <div 
-        style={{ position: 'fixed', bottom: '10px', right: '10px', width: '10px', height: '10px', cursor: 'pointer', zIndex: 9999 }} 
+        className="developer-settings-dot"
         onClick={handleDeveloperSettings}
         title="Developer Settings"
       >
-        <span style={{ color: 'rgba(255,255,255,0.1)' }}>.</span>
+        ●
       </div>
     </div>
   );
