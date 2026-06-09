@@ -1,9 +1,9 @@
 import { chromium } from 'playwright';
 import { randomUUID } from 'crypto';
 const VIEWPORT = { width: 1280, height: 720 };
-const FRAME_INTERVAL_MS = 150;
+const FRAME_INTERVAL_MS = 500; // Increased from 150 to save huge amounts of CPU
 const MAX_TABS = 10;
-const NAVIGATE_TIMEOUT = 15000;
+const NAVIGATE_TIMEOUT = 60000; // Increased from 15000 to prevent timeout on slow servers
 const NEW_TAB_HTML = `
 <!DOCTYPE html>
 <html>
@@ -109,7 +109,7 @@ function startScreenshotLoop(roomId, session, io) {
     try {
       const page = session.tabsMap.get(session.activeTabId);
       if (!page || page.isClosed()) return;
-      const buffer = await page.screenshot({ type: 'jpeg', quality: 70 });
+      const buffer = await page.screenshot({ type: 'jpeg', quality: 40 });
       io.of('/browser').to(roomId).emit('browser:frame', {
         buffer,
         tabId: session.activeTabId,
@@ -144,13 +144,34 @@ export async function getOrCreateSession(roomId, io, startUrl) {
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
   });
   await context.addInitScript("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})");
+  
+  // Create a reusable route interceptor for blocking ads/trackers
+  const applyAdBlocker = async (page) => {
+    await page.route('**/*', (route) => {
+      const url = route.request().url();
+      if (url.includes('googleads') || url.includes('doubleclick') || url.includes('analytics') || url.includes('tracking')) {
+        route.abort();
+      } else {
+        route.continue();
+      }
+    });
+  };
+
   const initialPage = await context.newPage();
+  await applyAdBlocker(initialPage);
+
   const tabId = randomUUID();
   if (startUrl) {
     await initialPage.goto(startUrl, { waitUntil: 'domcontentloaded', timeout: NAVIGATE_TIMEOUT }).catch(() => {});
   } else {
     await initialPage.setContent(NEW_TAB_HTML).catch(() => {});
   }
+  
+  // Add ad-blocker / Tracker blocker for all new pages to speed up loading
+  context.on('page', async (page) => {
+    await applyAdBlocker(page);
+  });
+
   const session = {
     browser,
     context,
