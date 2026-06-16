@@ -23,7 +23,7 @@ const corsOptions = {
       "http://localhost:3000"
     ];
 
-    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+    if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app') || origin.endsWith('.ngrok-free.dev') || origin.endsWith('.ngrok-free.app')) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -31,7 +31,7 @@ const corsOptions = {
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  allowedHeaders: ["Content-Type", "Authorization", "ngrok-skip-browser-warning"]
 }
 app.use(cors(corsOptions))
 app.use(morgan("dev"))

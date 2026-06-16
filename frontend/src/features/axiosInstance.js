@@ -19,6 +19,7 @@ const api = axios.create({
 
 api.interceptors.request.use(
     (config) => {
+        config.headers["ngrok-skip-browser-warning"] = "true";
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         }
