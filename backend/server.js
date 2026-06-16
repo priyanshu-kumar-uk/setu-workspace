@@ -21,7 +21,7 @@ const io = new Server(httpServer, {
         'http://localhost:3000'
       ];
 
-      if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app') || origin.endsWith('.ngrok-free.dev') || origin.endsWith('.ngrok-free.app')) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));

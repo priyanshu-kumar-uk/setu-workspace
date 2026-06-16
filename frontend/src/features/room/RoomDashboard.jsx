@@ -535,7 +535,7 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
       }
       // ── 2. CREATE SOCKET (not connected yet) ────────────────────────────
       const socketUrl = getSocketUrl();
-      const socket = ioClient(socketUrl, { autoConnect: false });
+      const socket = ioClient(socketUrl, { autoConnect: false, extraHeaders: { "ngrok-skip-browser-warning": "true" } });
       socketRef.current = socket;
       // ── 3. REGISTER ALL HANDLERS BEFORE CONNECTING ──────────────────────
       socket.on('connect', () => {

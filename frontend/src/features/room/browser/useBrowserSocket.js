@@ -13,6 +13,7 @@ export function useBrowserSocket(roomId) {
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,
+      extraHeaders: { "ngrok-skip-browser-warning": "true" },
     });
     socketRef.current = socket;
     socket.on('connect', () => {
