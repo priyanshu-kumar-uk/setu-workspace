@@ -73,14 +73,14 @@ const AnimatedSpeakingDots = () => (
 // ─────────────────────────────────────────────────────────────────────────────
 // VideoTile — useCallback ref binds srcObject the instant DOM node mounts
 // ─────────────────────────────────────────────────────────────────────────────
-const VideoTile = ({ stream, isLocal, isHost, label, isVideoOn, isMuted, isHandRaised, isScreenShare = false, isSpeaking = false }) => {
+const VideoTile = ({ stream, isLocal, isHost, label, isVideoOn, isMuted, isHandRaised, isScreenShare = false, isSpeaking = false, identifier }) => {
   const setVideoRef = useCallback(node => {
     if (node && stream) {
       node.srcObject = stream;
       node.play().catch(e => console.warn('[VideoTile] Autoplay blocked:', e));
     }
   }, [stream]);
-  const tileBackground = getAvatarGradient(label);
+  const tileBackground = getAvatarGradient(identifier || label);
   return (
     <div className={`rd-video-container ${isLocal ? 'rd-local-video' : ''} ${isScreenShare ? 'rd-screen-share' : ''} ${isSpeaking ? 'rd-speaking-active' : ''}`} style={{ position: 'relative' }}>
       {isVideoOn || isScreenShare ? (
@@ -158,11 +158,11 @@ const SharedScreenPresentationArea = ({
         <RoomDocsOverlay roomId={roomId} onClose={() => setShowDocsOverlay(false)} isVisible={showDocsOverlay} />
       </div>
     ) : (
-      <VideoTile stream={activeScreenPresenter.stream} isLocal isHost={iAmHost} isVideoOn={true} label={`${activeScreenPresenter.displayName} · Presenting`} isMuted={isMicMuted} isHandRaised={isMyHandRaised} isScreenShare={true} />
+      <VideoTile stream={activeScreenPresenter.stream} isLocal isHost={iAmHost} isVideoOn={true} label={`${activeScreenPresenter.displayName} · Presenting`} identifier={activeScreenPresenter.socketId || 'local_presenter'} isMuted={isMicMuted} isHandRaised={isMyHandRaised} isScreenShare={true} />
     );
   }
   return (
-    <VideoTile stream={activeScreenPresenter.screenStream} isLocal={false} isHost={activeScreenPresenter.socketId === roomOwnerId} isVideoOn={true} label={activeScreenPresenter.displayName || 'Guest'} isMuted={activeScreenPresenter.audio === false || mutedPeers.has(activeScreenPresenter.socketId)} isHandRaised={raisedHands.has(activeScreenPresenter.socketId)} isScreenShare={true} />
+    <VideoTile stream={activeScreenPresenter.screenStream} isLocal={false} isHost={activeScreenPresenter.socketId === roomOwnerId} isVideoOn={true} label={activeScreenPresenter.displayName || 'Guest'} identifier={activeScreenPresenter.socketId} isMuted={activeScreenPresenter.audio === false || mutedPeers.has(activeScreenPresenter.socketId)} isHandRaised={raisedHands.has(activeScreenPresenter.socketId)} isScreenShare={true} />
   );
 };
 // ─────────────────────────────────────────────────────────────────────────────
@@ -177,6 +177,7 @@ const ParticipantVerticalSidebar = ({ visibleSidebarParticipants, isMeSpeaking }
             stream={p.stream} 
             isScreenShare={false} 
             label={p.label}
+            identifier={p.id}
             isLocal={p.isLocal}
             isHost={p.isHost}
             isVideoOn={p.isVideoOn}
@@ -415,6 +416,9 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
         { urls: 'stun:stun1.l.google.com:19302' },
+        { urls: 'turn:openrelay.metered.ca:80', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443', username: 'openrelayproject', credential: 'openrelayproject' },
+        { urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }
       ]
     });
     const isScreen = connectionType === 'screen';
@@ -535,7 +539,11 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
       }
       // ── 2. CREATE SOCKET (not connected yet) ────────────────────────────
       const socketUrl = getSocketUrl();
-      const socket = ioClient(socketUrl, { autoConnect: false, extraHeaders: { "ngrok-skip-browser-warning": "true" } });
+      const socket = ioClient(socketUrl, { 
+        autoConnect: false, 
+        transports: ['websocket'],
+        extraHeaders: { "ngrok-skip-browser-warning": "true" } 
+      });
       socketRef.current = socket;
       // ── 3. REGISTER ALL HANDLERS BEFORE CONNECTING ──────────────────────
       socket.on('connect', () => {
@@ -552,7 +560,22 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
         });
       });
       socket.on('connect_error', err => console.error('[Socket] connect_error:', err));
-      socket.on('disconnect', reason => console.log('[Socket] disconnected:', reason));
+      socket.on('disconnect', reason => {
+        console.log('[Socket] disconnected:', reason);
+        if (cancelled) return;
+        // Tear down all peers on disconnect to ensure clean state upon reconnection
+        peersRef.current.forEach(pc => pc.close());
+        peersRef.current.clear();
+        pendingIceRef.current.clear();
+        screenPeersRef.current.forEach(pc => pc.close());
+        screenPeersRef.current.clear();
+        screenPendingIceRef.current.clear();
+        remoteStreamsRef.current = [];
+        setRemoteStreams([]);
+        setScreenShareState({ activeScreenSharerId: null, activeScreenSharerName: null, isScreenSharing: false, type: null });
+        setMutedPeers(new Set());
+        setRaisedHands(new Set());
+      });
       // ── room:initial-peers ─────────────────────────────────────────────
       // Fires ONLY on the JOINING user.
       // peers[] = socket IDs of everyone already in the room.
@@ -655,7 +678,7 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
         peersRef.current.set(newPeerId, pc);
         pendingIceRef.current.set(newPeerId, []);
         try {
-          const offer = await pc.createOffer();
+          const offer = await pc.createOffer({ offerToReceiveAudio: true, offerToReceiveVideo: true });
           await pc.setLocalDescription(offer);
           console.log('[Signal] Sending offer to', newPeerId);
           socket.emit('webrtc:signal-send', {
@@ -1130,10 +1153,10 @@ const RoomDashboard = ({ initialMicMuted = false, initialVideoOn = true }) => {
             {!screenShareState.isScreenSharing ? (
               /* ── 1. GALLERY VIEW — no one is sharing ──────────────────── */
               <div className={showBrowser ? 'rd-col-b rd-video-stack' : `rd-col-a rd-gallery-layout rd-video-grid ${galleryGridClass}`}>
-                <VideoTile stream={localStream} isLocal isHost={iAmHost} isVideoOn={isVideoOn} label={localLabel} isMuted={isMicMuted} isHandRaised={isMyHandRaised} isSpeaking={isMeSpeaking} />
+                <VideoTile stream={localStream} isLocal isHost={iAmHost} isVideoOn={isVideoOn} label={localLabel} identifier="local" isMuted={isMicMuted} isHandRaised={isMyHandRaised} isSpeaking={isMeSpeaking} />
                 {remoteStreams.map(({ socketId, stream, displayName, audio, video, isSpeaking }) => (
                   <VideoTile key={socketId} stream={stream} isLocal={false}
-                    isHost={socketId === roomOwnerId} isVideoOn={video ?? true} label={displayName || 'Guest'} isMuted={audio === false || mutedPeers.has(socketId)} isHandRaised={raisedHands.has(socketId)} isSpeaking={isSpeaking} />
+                    isHost={socketId === roomOwnerId} isVideoOn={video ?? true} label={displayName || 'Guest'} identifier={socketId} isMuted={audio === false || mutedPeers.has(socketId)} isHandRaised={raisedHands.has(socketId)} isSpeaking={isSpeaking} />
                 ))}
               </div>
             ) : (
