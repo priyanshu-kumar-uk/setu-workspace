@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, Video, FileText, Bot, HelpCircle, LogOut } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import api, { setAccessToken } from '../../axiosInstance';
 import './Sidebar.css';
 const NAV_ITEMS = [
@@ -12,6 +13,7 @@ const NAV_ITEMS = [
 const Sidebar = () => {
   const navigate  = useNavigate();
   const { pathname } = useLocation();
+  const queryClient = useQueryClient();
   const handleLogout = async () => {
     try {
       await api.post('/auth/logout');
@@ -19,6 +21,7 @@ const Sidebar = () => {
       console.error('Logout API error:', err);
     }
     setAccessToken(null);
+    queryClient.clear();
     navigate('/login');
   };
   return (

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Settings, LogOut } from 'lucide-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { authGetme } from '../../auth/hooks/api.hooks';
 import api, { setAccessToken } from '../../axiosInstance';
 import './ProfileMenu.css';
@@ -8,6 +9,7 @@ const ProfileMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: meData } = authGetme();
   const user = meData?.data || {};
   const firstName = user.firstname || user.firstName || '';
@@ -45,6 +47,7 @@ const ProfileMenu = () => {
       console.error('Logout API error:', err);
     }
     setAccessToken(null);
+    queryClient.clear();
     navigate('/login');
   };
   return (
