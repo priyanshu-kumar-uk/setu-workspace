@@ -211,7 +211,6 @@ const LandingPage = () => {
 
   return (
     <div className="landing-container">
-      {/* ── Navbar ───────────────────────────────────────────────────────── */}
       <nav className="navbar">
         <div className="nav-logo" onClick={() => navigate("/")}>
           SETU
