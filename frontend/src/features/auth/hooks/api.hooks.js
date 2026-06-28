@@ -7,7 +7,7 @@ export  function authOtpSend(){
 }
 export function authOtpVerify(){
    return useMutation({
-      mutationFn:({otp,email})=> otpVerifyApi({otp,email})
+      mutationFn:({otp,email})=> otpVerifyApi({otp,email}),
    })
 }
 export function authRegister(){
